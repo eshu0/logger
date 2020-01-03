@@ -1,4 +1,4 @@
-package shellframework
+package simplelogger
 
 import (
 	"fmt"
