@@ -29,5 +29,5 @@ type ISimpleLogger interface {
 	LogDebug(cmd string, data ...interface{})
 
 	// This opens a session
-	OpenSessionFileLog(session ISession) *os.File
+	OpenSessionFileLog(filename string, sessionid string) *os.File
 }
