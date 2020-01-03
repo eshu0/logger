@@ -10,7 +10,7 @@ import (
 )
 
 type SimpleLogger struct {
-	slinterfaces.SimpleLogger
+		slinterfaces.ISimpleLogger
 	loglevel kitlevel.Option
 	log      kitlog.Logger
 }
