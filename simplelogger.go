@@ -21,7 +21,7 @@ type SimpleLogger struct {
 // these function provide logging to the choosen logfile
 //
 
-func NewSimpleLogger(logger kitlog.Logger) ShellLogger {
+func NewSimpleLogger(logger kitlog.Logger) SimpleLogger {
 	ssl := SimpleLogger{}
 	ssl.log = logger
 	return ssl
