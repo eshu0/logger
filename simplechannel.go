@@ -60,6 +60,14 @@ func (lo *SimpleChannel) GetLogLevel() kitlevel.Option {
 	return lo.level
 }
 
+func (lo *SimpleChannel) SetLog(log kitlog.Logger) {
+	lo.log = log
+}
+
+func (lo *SimpleChannel) GetLog() kitlog.Logger {
+	return lo.log
+}
+
 func (lo *SimpleChannel) Close() {
 
 		if(lo.fileptr != nil){
