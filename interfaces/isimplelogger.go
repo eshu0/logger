@@ -21,6 +21,12 @@ type ISimpleLogger interface {
 	SetLog(log kitlog.Logger)
 	AddLog(log kitlog.Logger)
 
+	GetFileName() string
+	SetFileName(sessionid string) 
+
+	GetSessionID() string
+	SetSessionID(sessionid string)
+
 	//log functions
 	GetLogLevel() kitlevel.Option
 	SetLogLevel(kitlevel.Option)
