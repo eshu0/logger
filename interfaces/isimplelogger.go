@@ -1,36 +1,15 @@
 package slinterfaces
 
 import (
-	"os"
-
-	kitlog "github.com/go-kit/kit/log"
+	//kitlog "github.com/go-kit/kit/log"
 	kitlevel "github.com/go-kit/kit/log/level"
 )
 
 // main interface for the SimpleLogger
 type ISimpleLogger interface {
-	// logging
-
-	// Deprecated: GetLog exists for historical compatibility
-	// and should not be used. Use GetLogs instead
-	GetLog() kitlog.Logger
-	GetLogs() []kitlog.Logger
-
-	// Deprecated: SetLog exists for historical compatibility
-	// and should not be used. Use AddLog instead
-	SetLog(log kitlog.Logger)
-	AddLog(log kitlog.Logger)
-
-	GetFileName() string
-	SetFileName(sessionid string) 
-
-	GetSessionID() string
-	SetSessionID(sessionid string)
-
 	//log functions
 	GetLogLevel() kitlevel.Option
 	SetLogLevel(kitlevel.Option)
-	//SetLogPrefix(string)
 
 	LogErrorf(cmd string, message string, data ...interface{})
 	LogWarnf(cmd string, message string, data ...interface{})
@@ -42,7 +21,17 @@ type ISimpleLogger interface {
 	LogInfo(cmd string, data ...interface{})
 	LogDebug(cmd string, data ...interface{})
 
-	// This opens a session
-	OpenSessionFileLog(filename string, sessionid string) *os.File
-	OpenFileLog() *os.File
+	OpenSessionFileLog(logfilename string, sessionid string)
+
+	CloseChannel(sessionid string)
+	CloseAllChannels()
+
+ 	OpenChannel(sessionid string)
+	OpenAllChannels()
+
+	AddChannel(log ISimpleChannel)
+	GetChannel(sessionid  string) ISimpleChannel
+	GetChannels() map[string]ISimpleChannel
+ 	SetChannelLogLevel(sessionid string,lvl kitlevel.Option)
+
 }
