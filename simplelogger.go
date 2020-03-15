@@ -160,50 +160,64 @@ func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string
  		LOGGING after here
 */
 
+func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interface{}) {
+	for _, channel := range ssl.channels {
+		log := channel.GetLog()
+
+		if log != nil {
+			switch lvl {
+				case "debug" :
+							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+				case "warn" :
+							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+				case "info" :
+							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+			 case "error" :
+							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+			case "debugf" :
+							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+				case "warnf" :
+							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+				case "infof" :
+							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+			 case "errorf" :
+							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+			}
+		}else{
+			panic(fmt.Sprintf("log nil %s",channel.GetSessionID()))
+		}
+
+	}
+}
+
 // the logging functions are here
 func (ssl *SimpleLogger) LogDebug(cmd string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Debug(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
-	}
+	log(ssl, "debug", cmd, "%s", data)
 }
 
 func (ssl *SimpleLogger) LogWarn(cmd string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Warn(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
-	}
+	log(ssl, "warn", cmd,  "%s", data)
 }
 
 func (ssl *SimpleLogger) LogInfo(cmd string, data ...interface{}) {
-for _, channel := range ssl.channels {
-		kitlevel.Info(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
-	}
+	log(ssl, "info", cmd, "%s",  data)
 }
 func (ssl *SimpleLogger) LogError(cmd string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Error(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
-	}
+	log(ssl, "error", cmd,  "%s", data)
 }
 
 // the logging functions are here
 func (ssl *SimpleLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Debug(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-	}
+	log(ssl, "debugf", cmd, msg, data...)
 }
 
 func (ssl *SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Warn(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-	}
+	log(ssl, "warnf", cmd, msg, data...)
 }
 
 func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Info(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-	}
+	log(ssl, "infof", cmd, msg, data...)
 }
 func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
-	for _, channel := range ssl.channels {
-		kitlevel.Error(channel.GetLog()).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-	}
+	log(ssl, "errorf", cmd, msg, data...)
 }
