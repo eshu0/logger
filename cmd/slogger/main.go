@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	sl "github.com/eshu0/simplelogger"
-	kitlog "github.com/go-kit/kit/log"
+	//kitlog "github.com/go-kit/kit/log"
 )
 
 func main() {
@@ -20,10 +20,13 @@ func main() {
 
 	flag.Parse()
 
-	log := sl.NewSimpleLoggerWithFilename(*filename, *session)
+	log := sl.NewSimpleLogger(*filename, *session)
 
 	// lets open a flie log using the session
-	f1 := log.OpenFileLog()
+	log.OpenAllChannels()
+
+	//defer the close till the shell has closed
+	defer log.CloseAllChannels()
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -49,13 +52,20 @@ func main() {
 			inputs := strings.Split(text, " ")
 
 			if(len(inputs) == 1 ){
-				if(strings.ToLower(inputs[0]) == "filename"){
-					fmt.Println(fmt.Sprintf("'%s'", log.GetFileName()))
-					log.LogInfof("main()", "Get FileName: '%s'", log.GetFileName())
-				} else if(strings.ToLower(inputs[0]) == "session"){
-					fmt.Println(fmt.Sprintf("'%s'", log.GetSessionID()))
-					log.LogInfof("main()", "Get Session ID: '%s'", log.GetSessionID())
+
+				if(strings.ToLower(inputs[0]) == "sessionids"){
+					sessionids := log.GetSessionIDs()
+					for SessionID := range sessionids {
+						fmt.Println(fmt.Sprintf("'%s'", SessionID))
+						log.LogInfof("main()", "Get Session ID: '%s'", SessionID)
+					}
+				}else if (strings.ToLower(inputs[0]) == "sessions") {
+						for _,channel := range log.GetChannels() {
+							fmt.Println(fmt.Sprintf("'%s'", channel.GetSessionID()))
+							log.LogInfof("main()", "Get Session: '%s'", channel.GetSessionID())
+						}
 				}
+
 			}else{
 
 				if(len(inputs) >= 2){
@@ -69,9 +79,9 @@ func main() {
 						}else if(strings.ToLower(inputs[0]) == "warn"){
 							log.LogWarnf("main()", "'%s'", inputs[1])
 						}else if(strings.ToLower(inputs[0]) == "add" && strings.ToLower(inputs[1]) == "session"){
-							logger := kitlog.NewLogfmtLogger(f1)
-							logger = kitlog.With(logger, "session_id", inputs[2], "ts", kitlog.DefaultTimestampUTC)
-							log.AddLog(logger)
+							//logger := kitlog.NewLogfmtLogger(f1)
+							//logger = kitlog.With(logger, "session_id", inputs[2], "ts", kitlog.DefaultTimestampUTC)
+							//log.AddLog(logger)
 						}
 				}else{
 					fmt.Println(fmt.Sprintf("'%s' was split but only had %d inputs", text, len(inputs)))
@@ -82,6 +92,4 @@ func main() {
 		}
 	}
 
-	//defer the close till the shell has closed
-	defer f1.Close()
 }
