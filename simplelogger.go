@@ -146,6 +146,8 @@ func (ssl *SimpleLogger) OpenTimeNowFileLog(logfolder string, sessionid string) 
 
 func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) *os.File {
 	ssl1 := NewSimpleLoggerWithFilename(logfilename)
+	ssl1.sessionid = sessionid
+	
 	ssl = &ssl1
 	return ssl.OpenFileLog()
 }
