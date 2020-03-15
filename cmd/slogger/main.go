@@ -5,8 +5,10 @@ import (
 	"flag"
 	"os"
 	"strings"
+	"fmt"
 
 	sl "github.com/eshu0/simplelogger"
+	kitlog "github.com/go-kit/kit/log"
 )
 
 func main() {
@@ -18,12 +20,13 @@ func main() {
 
 	flag.Parse()
 
-	log := sl.NewSimpleLoggerWithFilename(*filename, *sessionid)
+	log := sl.NewSimpleLoggerWithFilename(*filename, *session)
 
 	// lets open a flie log using the session
 	f1 := log.OpenFileLog()
 
 	reader := bufio.NewReader(os.Stdin)
+
 	for {
 		// read the string input
 		text, readerr := reader.ReadString('\n')
@@ -34,12 +37,48 @@ func main() {
 			// break out for loop
 		}
 
+		log.LogDebugf("main()", "input was: '%s'", text)
+
 		// convert CRLF to LF
 		text = strings.Replace(text, "\n", "", -1)
-		if text == "quit" {
-			log.LogDebugf("main()", "Quitting do input '%s'", text)
+		if strings.ToLower(text) == "quit" || strings.ToLower(text) == "exit" {
+			fmt.Println("bye bye")
+			break
 		} else {
-			log.LogDebugf("main()", "'%s'", text)
+
+			inputs := strings.Split(text, " ")
+
+			if(len(inputs) == 1 ){
+				if(strings.ToLower(inputs[0]) == "filename"){
+					fmt.Println(fmt.Sprintf("'%s'", log.GetFileName()))
+					log.LogInfof("main()", "Get FileName: '%s'", log.GetFileName())
+				} else if(strings.ToLower(inputs[0]) == "session"){
+					fmt.Println(fmt.Sprintf("'%s'", log.GetSessionID()))
+					log.LogInfof("main()", "Get Session ID: '%s'", log.GetSessionID())
+				}
+			}else{
+
+				if(len(inputs) >= 2){
+						fmt.Println(fmt.Sprintf("Logged to '%s' with %s", inputs[0], inputs[1]))
+						if(strings.ToLower(inputs[0]) == "debug"){
+							log.LogDebugf("main()", "'%s'", inputs[1])
+						}else if(strings.ToLower(inputs[0]) == "info"){
+							log.LogInfof("main()", "'%s'", inputs[1])
+						}else if(strings.ToLower(inputs[0]) == "error"){
+							log.LogError("main()", "'%s'", inputs[1])
+						}else if(strings.ToLower(inputs[0]) == "warn"){
+							log.LogWarnf("main()", "'%s'", inputs[1])
+						}else if(strings.ToLower(inputs[0]) == "add" && strings.ToLower(inputs[1]) == "session"){
+							logger := kitlog.NewLogfmtLogger(f1)
+							logger = kitlog.With(logger, "session_id", inputs[2], "ts", kitlog.DefaultTimestampUTC)
+							log.AddLog(logger)
+						}
+				}else{
+					fmt.Println(fmt.Sprintf("'%s' was split but only had %d inputs", text, len(inputs)))
+					log.LogDebugf("main()", "'%s' was split but only had %d inputs", text, len(inputs))
+				}
+			}
+
 		}
 	}
 

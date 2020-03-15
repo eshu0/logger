@@ -9,21 +9,36 @@ import (
 	kitlevel "github.com/go-kit/kit/log/level"
 )
 
-type SimpleLogger struct {
-	//inherit from interface
-	sl.ISimpleLogger
 
-	// use kitlevel API
-	loglevel kitlevel.Option
+type Channel struct{
+
+	// session id
+	sessionid string
 
 	//Let's make an array of logging outputs
-	logs []kitlog.Logger
+	log kitlog.Logger
 
 	// filename for the log
 	filename string
 
-	// session id
-	sessionid string
+	fileptr *os.File
+
+	// use kitlevel API
+	level kitlevel.Option
+
+}
+
+type SimpleLogger struct {
+
+	//inherit from interface
+	sl.ISimpleLogger
+
+	// use kitlevel API
+	globallevel kitlevel.Option
+
+	//Let's make an array of logging outputs
+	channels map[string]*Channel
+
 }
 
 //
@@ -32,145 +47,207 @@ type SimpleLogger struct {
 // these function provide logging to the choosen logfile
 //
 
-func NewSimpleLogger(logger kitlog.Logger) SimpleLogger {
+func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
+
 	ssl := SimpleLogger{}
 
-	logs := []kitlog.Logger{}
-	logs = append(logs, logger)
-	ssl.logs = logs
-	
-	return ssl
-}
+	channels := make(map[string]*Channel)
 
-func NewSimpleLoggerWithFilename(filename string, sessionid string) SimpleLogger {
-	ssl := SimpleLogger{}
-	logs := []kitlog.Logger{}
-	ssl.logs = logs
+	lg := Channel{}
+	lg.SetFileName(filename)
+	lg.SetSessionID(sessionid)
 
-	ssl.SetFileName(filename)
-	ssl.SetSessionID(sessionid)
+	channels[lg.sessionid] = &lg
+
+	ssl.channels = channels
 
 	return ssl
 }
 
-//func (ssl *ShellLogger) SetLogPrefix(prefix string) {
-//ssl.log = kitlog.With(ssl.log, "session_id", session.ID())
-//}
+/*
+ 		SIMPLE LOG CHANNELS
+*/
 
-// Deprecated: SetLog exists for historical compatibility
-// and should not be used. Use AddLog instead
-func (ssl *SimpleLogger) SetLog(log kitlog.Logger) {
-	ssl.AddLog(log)
+func (ssl *SimpleLogger) AddChannel(log Channel) {
+	ssl.channels[log.sessionid] = &log
 }
 
-func (ssl *SimpleLogger) AddLog(log kitlog.Logger) {
-	logs := ssl.logs
-	logs = append(logs, log)
-	ssl.logs = logs
+func (ssl *SimpleLogger) GetChannel(sessionid  string) *Channel {
+	return ssl.channels[sessionid]
 }
 
-func (ssl *SimpleLogger) SetFileName(filename string) {
-	ssl.filename = filename
+func (ssl *SimpleLogger) GetChannels() map[string]*Channel {
+	return ssl.channels
 }
 
-func (ssl *SimpleLogger) GetFileName() string{
-	return ssl.filename
-}
-
-func (ssl *SimpleLogger) SetSessionID(sessionid string) {
-	ssl.sessionid = sessionid
-}
-
-func (ssl *SimpleLogger) GetSessionID() string {
-	return ssl.sessionid
-}
-
-// Deprecated: GetLog exists for historical compatibility
-// and should not be used. Use GetLogs instead
-func (ssl *SimpleLogger) GetLog() kitlog.Logger {
-	return ssl.logs[0]
-}
-
-func (ssl *SimpleLogger) GetLogs() []kitlog.Logger {
-	return ssl.logs
-}
-
-func (ssl *SimpleLogger) SetLogLevel(lvl kitlevel.Option) {
-	ssl.loglevel = lvl
+func (ssl *SimpleLogger) SetChannelLogLevel(sessionid string,lvl kitlevel.Option) {
 	// have to set the filter for the level
-	for i := 0; i < len(ssl.logs); i++ {
-		ssl.logs[i] = kitlevel.NewFilter(ssl.logs[i], lvl)
+	for _, channel := range ssl.channels {
+
+		if(sessionid ==""){
+			channel.level = lvl
+			channel.log = kitlevel.NewFilter(channel.log, lvl)
+		}else{
+			if(channel.sessionid == sessionid){
+				channel.level = lvl
+				channel.log = kitlevel.NewFilter(channel.log, lvl)
+			}
+		}
 	}
 }
 
-func (ssl *SimpleLogger) GetLogLevel() kitlevel.Option {
-	return ssl.loglevel
+func (ssl *SimpleLogger) GetChannelLogLevel(sessionid string) kitlevel.Option {
+	for _, channel := range ssl.channels {
+			if(channel.sessionid == sessionid) {
+				return channel.level
+			}
+	}
+	return nil
 }
+
+/*
+ 		SIMPLE LOG FUNCTIONS
+*/
+
+
+func (ssl *SimpleLogger) CloseChannel(sessionid string) {
+	// have to set the filter for the level
+	for _, channel := range ssl.channels {
+
+		if(sessionid ==""){
+			if(channel.fileptr != nil){
+				channel.fileptr.Close()
+			}
+		}else{
+			if(channel.sessionid == sessionid){
+				if(channel.fileptr != nil){
+					channel.fileptr.Close()
+				}
+			}
+		}
+	}
+}
+
+func (ssl *SimpleLogger) CloseAllChannels() {
+	ssl.CloseChannel("")
+}
+
+func (ssl *SimpleLogger) OpenChannel(sessionid string) {
+	// have to set the filter for the level
+	for _, channel := range ssl.channels {
+
+		if(sessionid ==""){
+			channel.OpenFileLog()
+		}else{
+			if(channel.sessionid == sessionid){
+				channel.OpenFileLog()
+			}
+		}
+	}
+}
+
+func (ssl *SimpleLogger) OpenAllChannels() {
+	ssl.OpenChannel("")
+}
+
+func (ssl *SimpleLogger) SetLogLevel(lvl kitlevel.Option) {
+	ssl.globallevel = lvl
+	ssl.SetChannelLogLevel("",lvl)
+}
+
+func (ssl *SimpleLogger) GetLogLevel() kitlevel.Option {
+	return ssl.globallevel
+}
+
+func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) {
+
+	channel := Channel{}
+	channel.SetFileName(logfilename)
+	channel.SetSessionID(sessionid)
+	channel.OpenFileLog()
+
+	ssl.AddChannel(channel)
+
+	// default to show everything
+	ssl.SetLogLevel(kitlevel.AllowAll())
+}
+
+/*
+ 		LOGGING after here
+*/
 
 // the logging functions are here
 func (ssl *SimpleLogger) LogDebug(cmd string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Debug(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
+	for _, channel := range ssl.channels {
+		kitlevel.Debug(channel.log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
 	}
 }
 
 func (ssl *SimpleLogger) LogWarn(cmd string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Warn(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
+	for _, channel := range ssl.channels {
+		kitlevel.Warn(channel.log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
 	}
 }
 
 func (ssl *SimpleLogger) LogInfo(cmd string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Info(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
+for _, channel := range ssl.channels {
+		kitlevel.Info(channel.log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
 	}
 }
 func (ssl *SimpleLogger) LogError(cmd string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Error(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
+	for _, channel := range ssl.channels {
+		kitlevel.Error(channel.log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data))
 	}
 }
 
 // the logging functions are here
 func (ssl *SimpleLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Debug(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+	for _, channel := range ssl.channels {
+		kitlevel.Debug(channel.log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 	}
 }
 
 func (ssl *SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Warn(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+	for _, channel := range ssl.channels {
+		kitlevel.Warn(channel.log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 	}
 }
 
 func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Info(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+	for _, channel := range ssl.channels {
+		kitlevel.Info(channel.log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 	}
 }
 func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
-	for i := 0; i < len(ssl.logs); i++ {
-		kitlevel.Error(ssl.logs[i]).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+	for _, channel := range ssl.channels {
+		kitlevel.Error(channel.log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 	}
 }
 
-/*
-func (ssl *SimpleLogger) OpenTimeNowFileLog(logfolder string, sessionid string) *os.File {
-	currentTime := time.Now()
-	return OpenSessionFileLog(logfilename, currentTime.Format("2006-01-02-15-04-05"), )
 
-}
+/*
+ Channel Functions after here
 */
 
-func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) *os.File {
-	ssl.SetFileName(logfilename)
-	ssl.SetSessionID(sessionid)
-	return ssl.OpenFileLog()
+func (lo *Channel) SetFileName(filename string) {
+	lo.filename = filename
 }
 
-func (ssl *SimpleLogger) OpenFileLog() *os.File {
-	f, err := os.OpenFile(ssl.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+func (lo *Channel) GetFileName() string{
+	return lo.filename
+}
+
+func (lo *Channel) SetSessionID(sessionid string) {
+	lo.sessionid = sessionid
+}
+
+func (lo *Channel) GetSessionID() string {
+	return lo.sessionid
+}
+
+func (lo *Channel) OpenFileLog() {
+
+	f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	// check error
 	if err != nil {
 		panic(err)
@@ -178,18 +255,13 @@ func (ssl *SimpleLogger) OpenFileLog() *os.File {
 
 	//logger :=
 	logger := kitlog.NewLogfmtLogger(f)                                                         //(f, session.ID()+" ", log.LstdFlags)
-	logger = kitlog.With(logger, "session_id", ssl.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
+	logger = kitlog.With(logger, "session_id", lo.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
 
 	// check log is valid
 	if logger == nil {
 		panic("logger is nil")
 	}
 
-	ssl.AddLog(logger)
+	lo.fileptr = f
 
-	// default to show everything
-	ssl.SetLogLevel(kitlevel.AllowAll())
-
-	//ssl.loglevel = -1
-	return f
 }
