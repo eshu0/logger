@@ -10,8 +10,16 @@ import (
 // main interface for the SimpleLogger
 type ISimpleLogger interface {
 	// logging
+
+	// Deprecated: GetLog exists for historical compatibility
+	// and should not be used. Use GetLogs instead
 	GetLog() kitlog.Logger
+	GetLogs() []kitlog.Logger
+
+	// Deprecated: SetLog exists for historical compatibility
+	// and should not be used. Use AddLog instead
 	SetLog(log kitlog.Logger)
+	AddLog(log kitlog.Logger)
 
 	//log functions
 	GetLogLevel() kitlevel.Option
@@ -30,4 +38,5 @@ type ISimpleLogger interface {
 
 	// This opens a session
 	OpenSessionFileLog(filename string, sessionid string) *os.File
+	OpenFileLog() *os.File
 }
