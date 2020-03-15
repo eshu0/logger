@@ -22,6 +22,7 @@ type ISimpleLogger interface {
 	LogDebug(cmd string, data ...interface{})
 
 	OpenSessionFileLog(logfilename string, sessionid string)
+	GetSessionIDs() []string
 
 	CloseChannel(sessionid string)
 	CloseAllChannels()

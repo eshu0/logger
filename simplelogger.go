@@ -60,6 +60,16 @@ func (ssl *SimpleLogger) GetChannels() map[string]sl.ISimpleChannel {
 	return ssl.channels
 }
 
+func (ssl *SimpleLogger) GetSessionIDs() []string {
+	var keys []string
+	for k := range ssl.channels {
+	    keys = append(keys, k)
+	}
+	return keys
+}
+
+
+
 func (ssl *SimpleLogger) SetChannelLogLevel(sessionid string,lvl kitlevel.Option) {
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
