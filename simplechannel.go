@@ -92,6 +92,7 @@ func (lo *SimpleChannel) Open() {
 		panic("logger is nil")
 	}
 
+	lo.SetLog(logger)
 	lo.fileptr = f
 
 }
