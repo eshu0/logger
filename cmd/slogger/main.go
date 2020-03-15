@@ -55,14 +55,18 @@ func main() {
 
 				if(strings.ToLower(inputs[0]) == "sessionids"){
 					sessionids := log.GetSessionIDs()
-					for SessionID := range sessionids {
+					for _, SessionID := range sessionids {
 						fmt.Println(fmt.Sprintf("'%s'", SessionID))
 						log.LogInfof("main()", "Get Session ID: '%s'", SessionID)
 					}
 				}else if (strings.ToLower(inputs[0]) == "sessions") {
 						for _,channel := range log.GetChannels() {
-							fmt.Println(fmt.Sprintf("'%s'", channel.GetSessionID()))
+							fmt.Println(fmt.Sprintf("Session ID: '%s'", channel.GetSessionID()))
+							fmt.Println(fmt.Sprintf("FileName: '%s'", channel.GetFileName()))
+							fmt.Println("----")
 							log.LogInfof("main()", "Get Session: '%s'", channel.GetSessionID())
+							log.LogInfof("main()", "Get FileName: '%s'", channel.GetFileName())
+
 						}
 				}
 
@@ -79,6 +83,11 @@ func main() {
 						}else if(strings.ToLower(inputs[0]) == "warn"){
 							log.LogWarnf("main()", "'%s'", inputs[1])
 						}else if(strings.ToLower(inputs[0]) == "add" && strings.ToLower(inputs[1]) == "session"){
+							channel := &sl.SimpleChannel{}
+							channel.SetSessionID(inputs[2])
+							channel.SetFileName(inputs[3])
+							channel.Open()
+							log.AddChannel(channel)
 							//logger := kitlog.NewLogfmtLogger(f1)
 							//logger = kitlog.With(logger, "session_id", inputs[2], "ts", kitlog.DefaultTimestampUTC)
 							//log.AddLog(logger)
