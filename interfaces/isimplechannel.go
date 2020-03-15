@@ -1,8 +1,6 @@
 package slinterfaces
 
 import (
-	"os"
-
 	kitlog "github.com/go-kit/kit/log"
 	kitlevel "github.com/go-kit/kit/log/level"
 )
@@ -24,5 +22,5 @@ type ISimpleChannel interface {
 	SetLogLevel(kitlevel.Option)
 
 	Open()
-	Close()	
+	Close()
 }

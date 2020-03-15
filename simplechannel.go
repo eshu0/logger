@@ -53,6 +53,7 @@ func (lo *SimpleChannel) GetSessionID() string {
 
 func (lo *SimpleChannel) SetLogLevel(lvl kitlevel.Option) {
 	lo.level = lvl
+	lo.log = kitlevel.NewFilter(lo.log, lvl)
 }
 
 func (lo *SimpleChannel) GetLogLevel() kitlevel.Option {
