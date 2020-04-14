@@ -172,18 +172,18 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
 				case "info" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-			 case "error" :
+			  case "error" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-			case "debugf" :
+		 	  case "debugf" :
 							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 				case "warnf" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 				case "infof" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-			 case "errorf" :
+			  case "errorf" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 			}
-		}else{
+		} else {
 			panic(fmt.Sprintf("log nil %s",channel.GetSessionID()))
 		}
 
@@ -202,8 +202,13 @@ func (ssl *SimpleLogger) LogWarn(cmd string, data ...interface{}) {
 func (ssl *SimpleLogger) LogInfo(cmd string, data ...interface{}) {
 	log(ssl, "info", cmd, "%s",  data)
 }
+
 func (ssl *SimpleLogger) LogError(cmd string, data ...interface{}) {
 	log(ssl, "error", cmd,  "%s", data)
+}
+
+func (ssl *SimpleLogger) LogErrorE(cmd string, data error) {
+	log(ssl, "error", cmd,  "%s", data.Error())
 }
 
 // the logging functions are here
@@ -218,6 +223,7 @@ func (ssl *SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
 func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 	log(ssl, "infof", cmd, msg, data...)
 }
+
 func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	log(ssl, "errorf", cmd, msg, data...)
 }
