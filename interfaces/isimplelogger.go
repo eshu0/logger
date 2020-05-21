@@ -7,9 +7,17 @@ import (
 
 // main interface for the SimpleLogger
 type ISimpleLogger interface {
-	//log functions
+	//Log Level functions
 	GetLogLevel() kitlevel.Option
 	SetLogLevel(kitlevel.Option)
+
+	//Print To Screen functions
+	GetPrintToScreen() bool
+	SetPrintToScreen(bool)
+
+	//Log Level PrintToScreen functions
+	GetPrintToScreenLogLevel() kitlevel.Option
+	SetPrintToScreenLogLevel(kitlevel.Option)
 
 	LogErrorf(cmd string, message string, data ...interface{})
 	LogWarnf(cmd string, message string, data ...interface{})

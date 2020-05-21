@@ -22,6 +22,8 @@ type SimpleLogger struct {
 	//Let's make an array of logging outputs
 	channels map[string]sl.ISimpleChannel
 
+	printtoscreen bool 
+	printtoscreenlvl kitlevel.Option
 }
 
 //
@@ -130,6 +132,34 @@ func (ssl *SimpleLogger) GetChannelLogLevel(sessionid string) kitlevel.Option {
 */
 
 
+// Generates Random session string
+func RandomSessionID() string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, 6)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func (ssl *SimpleLogger) GetPrintToScreenLogLevel() kitlevel.Option {
+	return ssl.printtoscreenlvl
+}
+
+func (ssl *SimpleLogger) SetPrintToScreenLogLevel(setlvl kitlevel.Option ){
+	ssl.printtoscreenlvl = setlvl
+}
+
+func (ssl *SimpleLogger) GetPrintToScreen() bool {
+	return ssl.printtoscreen
+}
+
+func (ssl *SimpleLogger) SetPrintToScreen(toggle bool){
+	ssl.printtoscreen = toggle
+}
+
+
 func (ssl *SimpleLogger) CloseChannel(sessionid string) {
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
@@ -192,6 +222,7 @@ func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string
 */
 
 func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interface{}) {
+
 	for _, channel := range ssl.channels {
 		log := channel.GetLog()
 
@@ -199,26 +230,69 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 			switch lvl {
 				case "debug" :
 							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break		
 				case "warn" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break		
 				case "info" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-			  case "error" :
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break		
+				case "error" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-		 	  case "debugf" :
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break		
+				case "debugf" :
 							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...))
+							break
 				case "warnf" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
+							break
 				case "infof" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-			  case "errorf" :
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
+							break
+			  	case "errorf" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
+							break
 			}
 		} else {
-			panic(fmt.Sprintf("log nil %s",channel.GetSessionID()))
+			printscreen(ssl, "log", fmt.Sprintf("log nil %s",channel.GetSessionID()))
 		}
-
 	}
+
+}
+
+
+func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
+
+	if ssl.GetPrintToScreen() {
+
+		switch lvl {
+			case "debug" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "warn" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "info" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "error" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "debugf" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "warnf" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "infof" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+			case "errorf" :
+						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+		}
+	}
+
 }
 
 // the logging functions are here
@@ -258,16 +332,3 @@ func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	log(ssl, "errorf", cmd, msg, data...)
 }
-
-
-  
-func RandomSessionID() string {
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
-	b := make([]byte, 6)
-	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
-	}
-	return string(b)
-}
-
