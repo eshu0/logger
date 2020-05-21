@@ -2,6 +2,9 @@ package simplelogger
 
 import (
 	"fmt"
+	"os"
+	"math/rand"
+	"time"
 
 	sl "github.com/eshu0/simplelogger/interfaces"
 	//kitlog "github.com/go-kit/kit/log"
@@ -26,6 +29,30 @@ type SimpleLogger struct {
 //
 // these function provide logging to the choosen logfile
 //
+
+func NewApplicationSessionLogger() SimpleLogger {
+	return NewApplicationSessionLogger(RandomSessionID())
+}
+
+
+func NewApplicationSessionLogger(sessionid string) SimpleLogger {
+
+	ssl := SimpleLogger{}
+
+	channels := make(map[string]sl.ISimpleChannel)
+
+	lg := &SimpleChannel{}
+	applicationfilename :=filepath.Base(os.Args[0])
+
+	lg.SetFileName(applicationfilename + ".log")
+	lg.SetSessionID(sessionid)
+
+	channels[lg.sessionid] = lg
+
+	ssl.channels = channels
+
+	return ssl
+}
 
 func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 
@@ -227,3 +254,16 @@ func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	log(ssl, "errorf", cmd, msg, data...)
 }
+
+
+  
+func RandomSessionID() string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, 6)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
