@@ -223,20 +223,32 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 			switch lvl {
 				case "debug" :
 							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))	
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break	
 				case "warn" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break	
 				case "info" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))	
+							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
+							break	
 				case "error" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
 							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
 							break		
 				case "debugf" :
 							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
+							break
 				case "warnf" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
+							break
 				case "infof" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
+							break
 			  	case "errorf" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
