@@ -30,10 +30,9 @@ type SimpleLogger struct {
 // these function provide logging to the choosen logfile
 //
 
-func NewApplicationSessionLogger() SimpleLogger {
+func NewApplicationLogger() SimpleLogger {
 	return NewApplicationSessionLogger(RandomSessionID())
 }
-
 
 func NewApplicationSessionLogger(sessionid string) SimpleLogger {
 
