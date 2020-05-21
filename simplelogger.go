@@ -32,11 +32,11 @@ type SimpleLogger struct {
 // these function provide logging to the choosen logfile
 //
 
-func NewApplicationLogger() SimpleLogger {
+func NewApplicationLogger() *SimpleLogger {
 	return NewApplicationSessionLogger(RandomSessionID())
 }
 
-func NewApplicationSessionLogger(sessionid string) SimpleLogger {
+func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
 	
 	appname, err:= os.Executable()
 	
@@ -47,9 +47,9 @@ func NewApplicationSessionLogger(sessionid string) SimpleLogger {
 	return NewSimpleLogger(appname + ".log", sessionid)
 }
 
-func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
+func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
 
-	ssl := SimpleLogger{}
+	ssl := &SimpleLogger{}
 
 	channels := make(map[string]sl.ISimpleChannel)
 
@@ -61,8 +61,11 @@ func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 
 	ssl.channels = channels
 
-	ssl.printtoscreen  = true
-	ssl.printtoscreenlvl = kitlevel.AllowAll()
+	ssl.SetPrintToScreen(true)
+	ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
+
+	//ssl.printtoscreen  = true
+	//ssl.printtoscreenlvl = kitlevel.AllowAll()
 
 	return ssl
 }
