@@ -41,9 +41,14 @@ func NewApplicationSessionLogger(sessionid string) SimpleLogger {
 	channels := make(map[string]sl.ISimpleChannel)
 
 	lg := &SimpleChannel{}
-	applicationfilename :=filepath.Base(os.Args[0])
+	
+	appname, err:= os.Executable()
+	
+	if(err != nil) {
+		appname = "unknown"
+	}
 
-	lg.SetFileName(applicationfilename + ".log")
+	lg.SetFileName(appname + ".log")
 	lg.SetSessionID(sessionid)
 
 	channels[lg.sessionid] = lg
