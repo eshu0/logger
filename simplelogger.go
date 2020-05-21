@@ -56,7 +56,9 @@ func NewApplicationSessionLogger(sessionid string) SimpleLogger {
 	channels[lg.sessionid] = lg
 
 	ssl.channels = channels
-
+	ssl.SetPrintToScreen(true)
+	ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
+	
 	return ssl
 }
 
@@ -229,33 +231,21 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 		if log != nil {
 			switch lvl {
 				case "debug" :
-							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-							break		
+							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))	
 				case "warn" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-							break		
 				case "info" :
-							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
-							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-							break		
+							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))	
 				case "error" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
 							printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
 							break		
 				case "debugf" :
 							kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...))
-							break
 				case "warnf" :
 							kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
-							break
 				case "infof" :
 							kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
-							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
-							break
 			  	case "errorf" :
 							kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
 							printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...) )
