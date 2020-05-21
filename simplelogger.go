@@ -262,7 +262,7 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 							break
 			}
 		} else {
-			printscreen(ssl, "log", fmt.Sprintf("log nil %s",channel.GetSessionID()))
+			printscreen(ssl, lvl, "log", fmt.Sprintf("log nil %s",channel.GetSessionID()))
 		}
 	}
 
