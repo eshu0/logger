@@ -37,29 +37,14 @@ func NewApplicationLogger() SimpleLogger {
 }
 
 func NewApplicationSessionLogger(sessionid string) SimpleLogger {
-
-	ssl := SimpleLogger{}
-
-	channels := make(map[string]sl.ISimpleChannel)
-
-	lg := &SimpleChannel{}
 	
 	appname, err:= os.Executable()
 	
 	if(err != nil) {
 		appname = "unknown"
 	}
-
-	lg.SetFileName(appname + ".log")
-	lg.SetSessionID(sessionid)
-
-	channels[lg.sessionid] = lg
-
-	ssl.channels = channels
-	ssl.SetPrintToScreen(true)
-	ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
 	
-	return ssl
+	return NewSimpleLogger(appname + ".log", sessionid)
 }
 
 func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
@@ -75,6 +60,9 @@ func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 	channels[lg.sessionid] = lg
 
 	ssl.channels = channels
+
+	ssl.printtoscreen  = true
+	ssl.printtoscreenlvl = kitlevel.AllowAll()
 
 	return ssl
 }

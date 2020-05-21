@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	sl "github.com/eshu0/simplelogger"
-	//kitlog "github.com/go-kit/kit/log"
+	kitlevel "github.com/go-kit/kit/log/level"
 )
 
 func main() {
@@ -68,6 +68,20 @@ func main() {
 							log.LogInfof("main()", "Get FileName: '%s'", channel.GetFileName())
 
 						}
+				} else if (strings.ToLower(inputs[0]) == "printscreenon") {
+					fmt.Println("Setting Printing to screen on")
+					log.SetPrintToScreen(true)
+					log.SetPrintToScreenLogLevel(kitlevel.AllowAll())
+				} else if (strings.ToLower(inputs[0]) == "printscreenoff") {
+					fmt.Println("Setting Printing to screen off")
+					log.SetPrintToScreen(false)
+				}else if (strings.ToLower(inputs[0]) == "printstatus") {
+					
+					if log.GetPrintToScreen() {
+						fmt.Println("Printing to screen")
+					}else{
+						fmt.Println("Not Printing to screen")
+					}
 				}
 
 			} else {
