@@ -7,7 +7,6 @@ import (
 	"time"
 
 	sl "github.com/eshu0/simplelogger/interfaces"
-	//kitlog "github.com/go-kit/kit/log"
 	kitlevel "github.com/go-kit/kit/log/level"
 )
 
@@ -32,10 +31,14 @@ type SimpleLogger struct {
 // these function provide logging to the choosen logfile
 //
 
+// This is the simplest application log generator
+// The os.args[0] is used for filename and the session is random
 func NewApplicationLogger() *SimpleLogger {
 	return NewApplicationSessionLogger(RandomSessionID())
 }
 
+// This is application log generator when the session is required
+// The os.args[0] is used for filename
 func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
 	
 	appname, err:= os.Executable()
@@ -47,6 +50,7 @@ func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
 	return NewSimpleLogger(appname + ".log", sessionid)
 }
 
+// This lets you specify the filename and the session
 func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
 
 	ssl := &SimpleLogger{}
@@ -61,11 +65,9 @@ func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
 
 	ssl.channels = channels
 
+	// by default we print everything being logged to the screen
 	ssl.SetPrintToScreen(true)
 	ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
-
-	//ssl.printtoscreen  = true
-	//ssl.printtoscreenlvl = kitlevel.AllowAll()
 
 	return ssl
 }
@@ -93,7 +95,6 @@ func (ssl *SimpleLogger) GetSessionIDs() []string {
 	}
 	return keys
 }
-
 
 
 func (ssl *SimpleLogger) SetChannelLogLevel(sessionid string,lvl kitlevel.Option) {
@@ -214,6 +215,7 @@ func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string
  		LOGGING after here
 */
 
+// I am not sure i like this method too much however it works
 func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interface{}) {
 
 	for _, channel := range ssl.channels {
@@ -261,11 +263,9 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 
 }
 
-
 func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 
 	if ssl.GetPrintToScreen() {
-
 		switch lvl {
 			case "debug" :
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
@@ -305,6 +305,7 @@ func (ssl *SimpleLogger) LogError(cmd string, data ...interface{}) {
 	log(ssl, "error", cmd,  "%s", data)
 }
 
+// This Log error allows errors to be logged .Error() is the data written
 func (ssl *SimpleLogger) LogErrorE(cmd string, data error) {
 	log(ssl, "error", cmd,  "%s", data.Error())
 }

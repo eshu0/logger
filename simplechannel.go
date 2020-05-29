@@ -8,7 +8,8 @@ import (
 	kitlevel "github.com/go-kit/kit/log/level"
 )
 
-
+// Simple Channel represents and output channel to be logged to
+// kitlog does the hard work this simply wraps
 type SimpleChannel struct{
 
 	//inherit from interface
@@ -29,7 +30,6 @@ type SimpleChannel struct{
 	level kitlevel.Option
 
 }
-
 
 /*
  Channel Functions after here
@@ -69,10 +69,9 @@ func (lo *SimpleChannel) GetLog() kitlog.Logger {
 }
 
 func (lo *SimpleChannel) Close() {
-
-		if(lo.fileptr != nil){
-			lo.fileptr.Close()
-		}
+	if(lo.fileptr != nil){
+		lo.fileptr.Close()
+	}
 }
 
 func (lo *SimpleChannel) Open() {
@@ -83,7 +82,6 @@ func (lo *SimpleChannel) Open() {
 		panic(err)
 	}
 
-	//logger :=
 	logger := kitlog.NewLogfmtLogger(f)                                                         //(f, session.ID()+" ", log.LstdFlags)
 	logger = kitlog.With(logger, "session_id", lo.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
 
