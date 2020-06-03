@@ -144,7 +144,6 @@ func (ssl *SimpleLogger) SetPrintToScreen(toggle sl.PrintLevel){
 	ssl.printtoscreen = toggle
 }
 
-
 func (ssl *SimpleLogger) CloseChannel(sessionid string) {
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {

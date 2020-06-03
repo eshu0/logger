@@ -7,8 +7,8 @@ import (
 	"strings"
 	"fmt"
 
+	sli "github.com/eshu0/simplelogger/interfaces"
 	sl "github.com/eshu0/simplelogger"
-	kitlevel "github.com/go-kit/kit/log/level"
 )
 
 func main() {
@@ -70,16 +70,17 @@ func main() {
 						}
 				} else if (strings.ToLower(inputs[0]) == "printscreenon") {
 					fmt.Println("Setting Printing to screen on")
-					log.SetPrintToScreen(true)
-					log.SetPrintToScreenLogLevel(kitlevel.AllowAll())
+					log.SetPrintToScreen(sli.PrintInfo)
 				} else if (strings.ToLower(inputs[0]) == "printscreenoff") {
 					fmt.Println("Setting Printing to screen off")
-					log.SetPrintToScreen(false)
+					log.SetPrintToScreen(sli.PrintNone)
 				}else if (strings.ToLower(inputs[0]) == "printstatus") {
 					
-					if log.GetPrintToScreen() {
+					if log.GetPrintToScreen() == sli.PrintInfo   {
 						fmt.Println("Printing to screen")
-					}else{
+					}else if log.GetPrintToScreen() == sli.PrintDebug {
+						fmt.Println("Printing to screen with debug")
+					} else{
 						fmt.Println("Not Printing to screen")
 					}
 				}

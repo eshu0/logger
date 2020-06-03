@@ -15,10 +15,7 @@ const (
 
 // main interface for the SimpleLogger
 type ISimpleLogger interface {
-	//Log Level functions
-	GetLogLevel() kitlevel.Option
-	SetLogLevel(kitlevel.Option)
-
+	
 	//Print To Screen functions
 	GetPrintToScreen() PrintLevel
 	SetPrintToScreen(PrintLevel)
