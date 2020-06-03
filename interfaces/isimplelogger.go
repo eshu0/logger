@@ -1,8 +1,16 @@
 package slinterfaces
 
 import (
-	//kitlog "github.com/go-kit/kit/log"
 	kitlevel "github.com/go-kit/kit/log/level"
+)
+
+
+type PrintLevel int
+
+const (	
+	PrintNone	PrintLevel = 0
+	PrintInfo  	PrintLevel = 1
+	PrintDebug 	PrintLevel = 2
 )
 
 // main interface for the SimpleLogger
@@ -12,12 +20,8 @@ type ISimpleLogger interface {
 	SetLogLevel(kitlevel.Option)
 
 	//Print To Screen functions
-	GetPrintToScreen() bool
-	SetPrintToScreen(bool)
-
-	//Log Level PrintToScreen functions
-	GetPrintToScreenLogLevel() kitlevel.Option
-	SetPrintToScreenLogLevel(kitlevel.Option)
+	GetPrintToScreen() PrintLevel
+	SetPrintToScreen(PrintLevel)
 
 	LogErrorf(cmd string, message string, data ...interface{})
 	LogWarnf(cmd string, message string, data ...interface{})

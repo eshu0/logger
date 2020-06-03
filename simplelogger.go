@@ -21,8 +21,7 @@ type SimpleLogger struct {
 	//Let's make an array of logging outputs
 	channels map[string]sl.ISimpleChannel
 
-	printtoscreen bool 
-	printtoscreenlvl kitlevel.Option
+	printtoscreen sl.PrintLevel 
 }
 
 //
@@ -66,8 +65,8 @@ func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
 	ssl.channels = channels
 
 	// by default we print everything being logged to the screen
-	ssl.SetPrintToScreen(true)
-	ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
+	ssl.SetPrintToScreen(PrintInfo)
+	//ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
 
 	return ssl
 }
@@ -137,19 +136,11 @@ func RandomSessionID() string {
 	return string(b)
 }
 
-func (ssl *SimpleLogger) GetPrintToScreenLogLevel() kitlevel.Option {
-	return ssl.printtoscreenlvl
-}
-
-func (ssl *SimpleLogger) SetPrintToScreenLogLevel(setlvl kitlevel.Option ){
-	ssl.printtoscreenlvl = setlvl
-}
-
-func (ssl *SimpleLogger) GetPrintToScreen() bool {
+func (ssl *SimpleLogger) GetPrintToScreen() sl.PrintLevel {
 	return ssl.printtoscreen
 }
 
-func (ssl *SimpleLogger) SetPrintToScreen(toggle bool){
+func (ssl *SimpleLogger) SetPrintToScreen(toggle PrintLevel){
 	ssl.printtoscreen = toggle
 }
 
@@ -265,10 +256,13 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 
 func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 
-	if ssl.GetPrintToScreen() {
+
+	if ssl.GetPrintToScreen() != sl.PrintNone {
 		switch lvl {
 			case "debug" :
+				if ssl.GetPrintToScreen() != sl.PrintDebug {
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+				}
 			case "warn" :
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
 			case "info" :
@@ -276,7 +270,9 @@ func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 			case "error" :
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
 			case "debugf" :
+				if ssl.GetPrintToScreen() != sl.PrintDebug {
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
+				}
 			case "warnf" :
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
 			case "infof" :
