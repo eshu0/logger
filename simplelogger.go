@@ -259,7 +259,7 @@ func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 	if ssl.GetPrintToScreen() != sl.PrintNone {
 		switch lvl {
 			case "debug" :
-				if ssl.GetPrintToScreen() != sl.PrintDebug {
+				if ssl.GetPrintToScreen() == sl.PrintDebug {
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
 				}
 			case "warn" :
@@ -269,7 +269,7 @@ func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 			case "error" :
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
 			case "debugf" :
-				if ssl.GetPrintToScreen() != sl.PrintDebug {
+				if ssl.GetPrintToScreen() == sl.PrintDebug {
 						fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl,cmd, msg))
 				}
 			case "warnf" :
