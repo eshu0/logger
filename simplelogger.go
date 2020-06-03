@@ -65,7 +65,7 @@ func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
 	ssl.channels = channels
 
 	// by default we print everything being logged to the screen
-	ssl.SetPrintToScreen(PrintInfo)
+	ssl.SetPrintToScreen(sl.PrintInfo)
 	//ssl.SetPrintToScreenLogLevel(kitlevel.AllowAll())
 
 	return ssl
@@ -140,7 +140,7 @@ func (ssl *SimpleLogger) GetPrintToScreen() sl.PrintLevel {
 	return ssl.printtoscreen
 }
 
-func (ssl *SimpleLogger) SetPrintToScreen(toggle PrintLevel){
+func (ssl *SimpleLogger) SetPrintToScreen(toggle sl.PrintLevel){
 	ssl.printtoscreen = toggle
 }
 
