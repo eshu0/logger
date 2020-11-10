@@ -49,7 +49,7 @@ func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
 	return NewSimpleLogger(appname+".log", sessionid)
 }
 
-func NewApplicationNowLogger(sessionid string) *SimpleLogger {
+func NewApplicationNowLogger() *SimpleLogger {
 	return NewAppSessionNowLogger(RandomSessionID())
 }
 
@@ -64,7 +64,7 @@ func NewAppSessionNowLogger(sessionid string) *SimpleLogger {
 	return NewSimpleLogger(filename+".log", sessionid)
 }
 
-func NewApplicationDayLogger(sessionid string) *SimpleLogger {
+func NewApplicationDayLogger() *SimpleLogger {
 	return NewAppSessionDayLogger(RandomSessionID())
 }
 
