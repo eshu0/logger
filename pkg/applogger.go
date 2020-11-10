@@ -66,6 +66,9 @@ func (al *AppLogger) LogWarn(cmd string, data ...interface{}) {
 }
 
 func (al *AppLogger) LogInfo(cmd string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogInfo(cmd, data)
 	}
