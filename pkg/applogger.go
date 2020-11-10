@@ -52,51 +52,51 @@ func (al *AppLogger) LogDebug(cmd string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger)) LogWarn(cmd string, data ...interface{}) {
+func (al *AppLogger) LogWarn(cmd string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogWarn(cmd, data)
 	}
 }
 
-func (al *AppLogger)) LogInfo(cmd string, data ...interface{}) {
+func (al *AppLogger) LogInfo(cmd string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogInfo(cmd, data)
 	}
 }
 
-func (al *AppLogger)) LogError(cmd string, data ...interface{}) {
+func (al *AppLogger) LogError(cmd string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogError(cmd, data)
 	}
 }
 
 // This Log error allows errors to be logged .Error() is the data written
-func (al *AppLogger)) LogErrorE(cmd string, data error) {
+func (al *AppLogger) LogErrorE(cmd string, data error) {
 	if al.Log != nil {
 		al.Log.LogErrorE(cmd, data)
 	}
 }
 
 // the logging functions are here
-func (al *AppLogger)) LogDebugf(cmd string, msg string, data ...interface{}) {
+func (al *AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogDebugf(cmd, data)
 	}
 }
 
-func (al *AppLogger)) LogWarnf(cmd string, msg string, data ...interface{}) {
+func (al *AppLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogWarnf(cmd, data)
 	}
 }
 
-func (al *AppLogger)) LogInfof(cmd string, msg string, data ...interface{}) {
+func (al *AppLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogInfof(cmd, data)
 	}
 }
 
-func (al *AppLogger)) LogErrorf(cmd string, msg string, data ...interface{}) {
+func (al *AppLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
 		al.Log.LogErrorf(cmd, data)
 	}
