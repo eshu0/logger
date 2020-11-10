@@ -56,7 +56,7 @@ func NewApplicationNowLogger(sessionid string) *SimpleLogger {
 	if err != nil {
 		appname = "unknown"
 	}
-	filename := time.Now().Format("2006-01-02-15-04-05") + "-" + appname
+	filename := appname + "-" + time.Now().Format("2006-01-02-15-04-05")
 	return NewSimpleLogger(filename+".log", sessionid)
 }
 
@@ -67,7 +67,7 @@ func NewApplicationDayLogger(sessionid string) *SimpleLogger {
 	if err != nil {
 		appname = "unknown"
 	}
-	filename := time.Now().Format("2006-01-02") + "-" + appname
+	filename := appname + "-" + time.Now().Format("2006-01-02")
 	return NewSimpleLogger(filename+".log", sessionid)
 }
 
