@@ -9,7 +9,8 @@ type AppLogger struct {
 	//inherit from interface
 	sli.IAppLogger
 
-	Log sli.ISimpleLogger `json:"-"`
+	Log     sli.ISimpleLogger `json:"-"`
+	Started bool              `json:"-"`
 }
 
 /*
@@ -17,7 +18,7 @@ type AppLogger struct {
 */
 
 // the logging functions are here
-func (al *AppLogger) Start() {
+func (al *AppLogger) StartLogging() {
 
 	if al.Log == nil {
 		//al = NewAppLogger()
@@ -30,10 +31,12 @@ func (al *AppLogger) Start() {
 	} else {
 		al.Log.OpenAllChannels()
 	}
+
+	al.Started = true
 }
 
 // the logging functions are here
-func (al *AppLogger) Finish() {
+func (al *AppLogger) FinishLogging() {
 	al.Log.CloseAllChannels()
 }
 
@@ -43,12 +46,18 @@ func (al *AppLogger) Finish() {
 
 // the logging functions are here
 func (al *AppLogger) LogDebug(cmd string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogDebug(cmd, data)
 	}
 }
 
 func (al *AppLogger) LogWarn(cmd string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogWarn(cmd, data)
 	}
@@ -61,6 +70,9 @@ func (al *AppLogger) LogInfo(cmd string, data ...interface{}) {
 }
 
 func (al *AppLogger) LogError(cmd string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogError(cmd, data)
 	}
@@ -68,6 +80,9 @@ func (al *AppLogger) LogError(cmd string, data ...interface{}) {
 
 // This Log error allows errors to be logged .Error() is the data written
 func (al *AppLogger) LogErrorE(cmd string, data error) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogErrorE(cmd, data)
 	}
@@ -75,24 +90,36 @@ func (al *AppLogger) LogErrorE(cmd string, data error) {
 
 // the logging functions are here
 func (al *AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogDebugf(cmd, msg, data)
 	}
 }
 
 func (al *AppLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogWarnf(cmd, msg, data)
 	}
 }
 
 func (al *AppLogger) LogInfof(cmd string, msg string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogInfof(cmd, msg, data)
 	}
 }
 
 func (al *AppLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
+	if !al.Started {
+		al.StartLogging()
+	}
 	if al.Log != nil {
 		al.Log.LogErrorf(cmd, msg, data)
 	}
