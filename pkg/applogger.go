@@ -36,7 +36,10 @@ func (al *AppLogger) StartLogging() {
 
 // the logging functions are here
 func (al *AppLogger) FinishLogging() {
-	al.Log.CloseAllChannels()
+
+	if al.Log != nil {
+		al.Log.CloseAllChannels()
+	}
 }
 
 /*
