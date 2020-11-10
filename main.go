@@ -18,5 +18,5 @@ func main() {
 	slog.LogInfo("Logging Info!")
 	slog.LogError("Logging Error!")
 	slog.LogDebug("Logging Debug!")
-	slog.LogDebug("Logging LogWarn!")
+	slog.LogWarn("Logging LogWarn!")
 }
