@@ -12,14 +12,6 @@ type AppLogger struct {
 	Log sli.ISimpleLogger `json:"-"`
 }
 
-// This is the simplest application log generator
-// The os.args[0] is used for filename and the session is random
-//func NewAppLogger() *AppLogger {
-//	alog := AppLogger{}
-//	alog.Log = NewApplicationNowLogger(RandomSessionID())
-//	return alog
-//}
-
 /*
 	START/FINISH LOG FUNCTIONS
 */
@@ -33,9 +25,6 @@ func (al *AppLogger) Start() {
 	log.OpenAllChannels()
 
 	al.Log = log
-
-	//defer the close till the shell has closed
-	defer al.Finish()
 }
 
 // the logging functions are here
