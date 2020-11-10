@@ -34,6 +34,7 @@ func (al *AppLogger) Start() {
 
 	//defer the close till the shell has closed
 	defer al.Finish()
+}
 
 // the logging functions are here
 func (al *AppLogger) Finish() {
