@@ -1,7 +1,7 @@
 package main
 
 import (
-	sl "github.com/eshu0/simplelogger"
+	sl "github.com/eshu0/simplelogger/pkg"
 )
 
 type TestApp struct {
