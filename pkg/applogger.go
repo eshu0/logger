@@ -80,24 +80,24 @@ func (al *AppLogger) LogErrorE(cmd string, data error) {
 // the logging functions are here
 func (al *AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
-		al.Log.LogDebugf(cmd, data...)
+		al.Log.LogDebugf(cmd, msg, data
 	}
 }
 
 func (al *AppLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
-		al.Log.LogWarnf(cmd, data...)
+		al.Log.LogWarnf(cmd, msg, data)
 	}
 }
 
 func (al *AppLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
-		al.Log.LogInfof(cmd, data...)
+		al.Log.LogInfof(cmd, msg, data)
 	}
 }
 
 func (al *AppLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	if al.Log != nil {
-		al.Log.LogErrorf(cmd, data...)
+		al.Log.LogErrorf(cmd, msg, data)
 	}
 }
