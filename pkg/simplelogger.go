@@ -50,6 +50,10 @@ func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
 }
 
 func NewApplicationNowLogger(sessionid string) *SimpleLogger {
+	return NewAppSessionNowLogger(RandomSessionID())
+}
+
+func NewAppSessionNowLogger(sessionid string) *SimpleLogger {
 
 	appname, err := os.Executable()
 
@@ -61,6 +65,10 @@ func NewApplicationNowLogger(sessionid string) *SimpleLogger {
 }
 
 func NewApplicationDayLogger(sessionid string) *SimpleLogger {
+	return NewAppSessionDayLogger(RandomSessionID())
+}
+
+func NewAppSessionDayLogger(sessionid string) *SimpleLogger {
 
 	appname, err := os.Executable()
 
