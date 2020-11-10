@@ -21,8 +21,7 @@ type AppLogger struct {
 func (al *AppLogger) StartLogging() {
 
 	if al.Log == nil {
-		//al = NewAppLogger()
-		log := NewApplicationNowLogger(RandomSessionID())
+		log := NewApplicationNowLogger()
 
 		// lets open a file log using the session
 		log.OpenAllChannels()
