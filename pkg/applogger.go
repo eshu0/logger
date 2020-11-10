@@ -18,13 +18,18 @@ type AppLogger struct {
 
 // the logging functions are here
 func (al *AppLogger) Start() {
-	//al = NewAppLogger()
-	log := NewApplicationNowLogger(RandomSessionID())
 
-	// lets open a file log using the session
-	log.OpenAllChannels()
+	if al.Log == nil {
+		//al = NewAppLogger()
+		log := NewApplicationNowLogger(RandomSessionID())
 
-	al.Log = log
+		// lets open a file log using the session
+		log.OpenAllChannels()
+
+		al.Log = log
+	} else {
+		al.Log.OpenAllChannels()
+	}
 }
 
 // the logging functions are here
