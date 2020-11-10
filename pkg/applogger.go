@@ -27,10 +27,12 @@ type AppLogger struct {
 // the logging functions are here
 func (al *AppLogger) Start() {
 	//al = NewAppLogger()
-	al.Log = NewApplicationNowLogger(RandomSessionID())
+	log := NewApplicationNowLogger(RandomSessionID())
 
 	// lets open a file log using the session
-	al.Log.OpenAllChannels()
+	log.OpenAllChannels()
+
+	al.Log = log
 
 	//defer the close till the shell has closed
 	defer al.Finish()
