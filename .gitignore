@@ -17,3 +17,4 @@ cmd/slogger/.DS_Store
 cmd/slogger/slogger
 .DS_Store
 cmd/applogger/applogger
+*.log
