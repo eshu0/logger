@@ -340,12 +340,12 @@ func (ssl *SimpleLogger) LogErrorE(cmd string, data error) {
 }
 
 // This Log error allows errors to be logged where .Error() will be passed into the string
-func (ssl *SimpleLogger) LogErrorEf(cmd string, msg string, data error) {
-	log(ssl, "error", cmd, msg, data.Error())
+func (ssl *SimpleLogger) LogErrorEf(cmd string, msg string, e error) {
+	log(ssl, "error", cmd, msg, econst.Error())
 }
 
 // This Log error allows errors to be logged where .Error() will be passed into the string
-func (ssl *SimpleLogger) LogErrorE(cmd string, msg string, e error, data ...interface{}) {
+func (ssl *SimpleLogger) LogErrorEfd(cmd string, msg string, e error, data ...interface{}) {
 	log(ssl, "error", cmd, msg, e.Error(), data...)
 }
 
