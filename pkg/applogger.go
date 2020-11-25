@@ -103,16 +103,6 @@ func (al *AppLogger) LogErrorEf(cmd string, msg string, e error) {
 	}
 }
 
-// This Log error allows errors to be logged .Error() is the data written
-func (al *AppLogger) LogErrorEfd(cmd string, msg string, e error, data ...interface{}) {
-	if !al.Started {
-		al.StartLogging()
-	}
-	if al.Log != nil {
-		al.Log.LogErrorEfd(cmd, msg, e, data)
-	}
-}
-
 // the logging functions are here
 func (al *AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
 	if !al.Started {

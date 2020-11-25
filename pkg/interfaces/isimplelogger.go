@@ -27,7 +27,6 @@ type ISimpleLogger interface {
 	LogError(cmd string, data ...interface{})
 	LogErrorE(cmd string, e error)
 	LogErrorEf(cmd string, message string, e error)
-	LogErrorEfd(cmd string, message string, e error, data ...interface{})
 	LogWarn(cmd string, data ...interface{})
 	LogInfo(cmd string, data ...interface{})
 	LogDebug(cmd string, data ...interface{})
