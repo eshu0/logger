@@ -279,55 +279,74 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 
 }
 
-func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
+func printscreenfmt(lvl string, cmd string, msg string) {
+	if msg != "" {
+		fmt.Println(fmt.Sprintf("%s: %s - %s", lvl, cmd, msg))
+	} else {
+		fmt.Println(fmt.Sprintf("%s: - %s", lvl, cmd))
+	}
+}
 
-	if ssl.GetPrintToScreen() != sli.PrintNone {
-		switch lvl {
-		case "debug":
-			if ssl.GetPrintToScreen() == sli.PrintDebug {
-				fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-			}
-		case "warn":
-			fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-		case "info":
-			fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-		case "error":
-			fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-		case "debugf":
-			if ssl.GetPrintToScreen() == sli.PrintDebug {
-				fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-			}
-		case "warnf":
-			fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-		case "infof":
-			fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
-		case "errorf":
-			fmt.Println(fmt.Sprintf("[%s] [%s] - %s", lvl, cmd, msg))
+func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
+	if ssl.GetPrintToScreen() == sli.PrintNone {
+		return
+	}
+
+	switch lvl {
+	case "debug":
+		if ssl.GetPrintToScreen() == sli.PrintDebug {
+			printscreenfmt("Debug", cmd, msg)
 		}
+	case "warn":
+		printscreenfmt("Warning", cmd, msg)
+	case "info":
+		printscreenfmt("Info", cmd, msg)
+	case "error":
+		printscreenfmt("Error", cmd, msg)
+	case "debugf":
+		if ssl.GetPrintToScreen() == sli.PrintDebug {
+			printscreenfmt("Debug", cmd, msg)
+		}
+	case "warnf":
+		printscreenfmt("Warning", cmd, msg)
+	case "infof":
+		printscreenfmt("Info", cmd, msg)
+	case "errorf":
+		printscreenfmt("Error", cmd, msg)
 	}
 
 }
 
 // the logging functions are here
 func (ssl *SimpleLogger) LogDebug(cmd string, data ...interface{}) {
-	log(ssl, "debug", cmd, "%s", data)
+	log(ssl, "debug", cmd, "%s", data...)
 }
 
 func (ssl *SimpleLogger) LogWarn(cmd string, data ...interface{}) {
-	log(ssl, "warn", cmd, "%s", data)
+	log(ssl, "warn", cmd, "%s", data...)
 }
 
 func (ssl *SimpleLogger) LogInfo(cmd string, data ...interface{}) {
-	log(ssl, "info", cmd, "%s", data)
+	log(ssl, "info", cmd, "%s", data...)
 }
 
 func (ssl *SimpleLogger) LogError(cmd string, data ...interface{}) {
-	log(ssl, "error", cmd, "%s", data)
+	log(ssl, "error", cmd, "%s", data...)
 }
 
 // This Log error allows errors to be logged .Error() is the data written
 func (ssl *SimpleLogger) LogErrorE(cmd string, data error) {
 	log(ssl, "error", cmd, "%s", data.Error())
+}
+
+// This Log error allows errors to be logged where .Error() will be passed into the string
+func (ssl *SimpleLogger) LogErrorEf(cmd string, msg string, data error) {
+	log(ssl, "error", cmd, msg, data.Error())
+}
+
+// This Log error allows errors to be logged where .Error() will be passed into the string
+func (ssl *SimpleLogger) LogErrorE(cmd string, msg string, e error, data ...interface{}) {
+	log(ssl, "error", cmd, msg, e.Error(), data...)
 }
 
 // the logging functions are here
