@@ -294,23 +294,17 @@ func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 
 	switch lvl {
 	case "debug":
-		if ssl.GetPrintToScreen() == sli.PrintDebug {
-			printscreenfmt("Debug", cmd, msg)
-		}
-	case "warn":
-		printscreenfmt("Warning", cmd, msg)
-	case "info":
-		printscreenfmt("Info", cmd, msg)
-	case "error":
-		printscreenfmt("Error", cmd, msg)
 	case "debugf":
 		if ssl.GetPrintToScreen() == sli.PrintDebug {
 			printscreenfmt("Debug", cmd, msg)
 		}
+	case "warn":
 	case "warnf":
 		printscreenfmt("Warning", cmd, msg)
+	case "info":
 	case "infof":
 		printscreenfmt("Info", cmd, msg)
+	case "error":
 	case "errorf":
 		printscreenfmt("Error", cmd, msg)
 	}
