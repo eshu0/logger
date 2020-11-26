@@ -340,17 +340,17 @@ func (ssl *SimpleLogger) LogErrorEf(cmd string, msg string, e error) {
 
 // the logging functions are here
 func (ssl *SimpleLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
-	log(ssl, "debugf", cmd, msg, data...)
+	log(ssl, "debugf", cmd, msg, data)
 }
 
 func (ssl *SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
-	log(ssl, "warnf", cmd, msg, data...)
+	log(ssl, "warnf", cmd, msg, data)
 }
 
 func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
-	log(ssl, "infof", cmd, msg, data...)
+	log(ssl, "infof", cmd, msg, data)
 }
 
 func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
-	log(ssl, "errorf", cmd, msg, data...)
+	log(ssl, "errorf", cmd, msg, data)
 }
