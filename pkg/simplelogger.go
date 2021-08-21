@@ -252,7 +252,7 @@ func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interfac
 				printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
 				break
 			case "error":
-				kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+				kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
 				break
 			case "debugf":
@@ -297,20 +297,20 @@ func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 		if ssl.GetPrintToScreen() == sli.PrintDebug {
 			printscreenfmt("Debug", cmd, msg)
 		}
+	case "warn":
+		printscreenfmt("Warning", cmd, msg)
+	case "info":
+		printscreenfmt("Info", cmd, msg)
+	case "error":
+		printscreenfmt("Error", cmd, msg)
 	case "debugf":
 		if ssl.GetPrintToScreen() == sli.PrintDebug {
 			printscreenfmt("Debug", cmd, msg)
 		}
-	case "warn":
-		printscreenfmt("Warning", cmd, msg)
 	case "warnf":
 		printscreenfmt("Warning", cmd, msg)
-	case "info":
-		printscreenfmt("Info", cmd, msg)
 	case "infof":
 		printscreenfmt("Info", cmd, msg)
-	case "error":
-		printscreenfmt("Error", cmd, msg)
 	case "errorf":
 		printscreenfmt("Error", cmd, msg)
 	}
