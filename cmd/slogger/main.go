@@ -3,12 +3,12 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"os"
 	"strings"
-	"fmt"
 
-	sli "github.com/eshu0/simplelogger/interfaces"
-	sl "github.com/eshu0/simplelogger"
+	sl "github.com/eshu0/logger/pkg"
+	sli "github.com/eshu0/logger/pkg/interfaces"
 )
 
 func main() {
@@ -51,62 +51,62 @@ func main() {
 
 			inputs := strings.Split(text, " ")
 
-			if(len(inputs) == 1 ){
+			if len(inputs) == 1 {
 
-				if(strings.ToLower(inputs[0]) == "sessionids"){
+				if strings.ToLower(inputs[0]) == "sessionids" {
 					sessionids := log.GetSessionIDs()
 					for _, SessionID := range sessionids {
 						fmt.Println(fmt.Sprintf("'%s'", SessionID))
 						log.LogInfof("main()", "Get Session ID: '%s'", SessionID)
 					}
-				} else if (strings.ToLower(inputs[0]) == "sessions") {
-						for _,channel := range log.GetChannels() {
-							fmt.Println(fmt.Sprintf("Session ID: '%s'", channel.GetSessionID()))
-							fmt.Println(fmt.Sprintf("FileName: '%s'", channel.GetFileName()))
-							fmt.Println("----")
-							log.LogInfof("main()", "Get Session: '%s'", channel.GetSessionID())
-							log.LogInfof("main()", "Get FileName: '%s'", channel.GetFileName())
+				} else if strings.ToLower(inputs[0]) == "sessions" {
+					for _, channel := range log.GetChannels() {
+						fmt.Println(fmt.Sprintf("Session ID: '%s'", channel.GetSessionID()))
+						fmt.Println(fmt.Sprintf("FileName: '%s'", channel.GetFileName()))
+						fmt.Println("----")
+						log.LogInfof("main()", "Get Session: '%s'", channel.GetSessionID())
+						log.LogInfof("main()", "Get FileName: '%s'", channel.GetFileName())
 
-						}
-				} else if (strings.ToLower(inputs[0]) == "printscreenon") {
+					}
+				} else if strings.ToLower(inputs[0]) == "printscreenon" {
 					fmt.Println("Setting Printing to screen on")
 					log.SetPrintToScreen(sli.PrintInfo)
-				} else if (strings.ToLower(inputs[0]) == "printscreenoff") {
+				} else if strings.ToLower(inputs[0]) == "printscreenoff" {
 					fmt.Println("Setting Printing to screen off")
 					log.SetPrintToScreen(sli.PrintNone)
-				}else if (strings.ToLower(inputs[0]) == "printstatus") {
-					
-					if log.GetPrintToScreen() == sli.PrintInfo   {
+				} else if strings.ToLower(inputs[0]) == "printstatus" {
+
+					if log.GetPrintToScreen() == sli.PrintInfo {
 						fmt.Println("Printing to screen")
-					}else if log.GetPrintToScreen() == sli.PrintDebug {
+					} else if log.GetPrintToScreen() == sli.PrintDebug {
 						fmt.Println("Printing to screen with debug")
-					} else{
+					} else {
 						fmt.Println("Not Printing to screen")
 					}
 				}
 
 			} else {
 
-				if(len(inputs) >= 2){
-						fmt.Println(fmt.Sprintf("Logged to '%s' with %s", inputs[0], inputs[1]))
-						if(strings.ToLower(inputs[0]) == "debug"){
-							log.LogDebugf("main()", "'%s'", inputs[1])
-						}else if(strings.ToLower(inputs[0]) == "info"){
-							log.LogInfof("main()", "'%s'", inputs[1])
-						}else if(strings.ToLower(inputs[0]) == "error"){
-							log.LogErrorf("main()", "'%s'", inputs[1])
-						}else if(strings.ToLower(inputs[0]) == "warn"){
-							log.LogWarnf("main()", "'%s'", inputs[1])
-						}else if(strings.ToLower(inputs[0]) == "add" && strings.ToLower(inputs[1]) == "session"){
-							channel := &sl.SimpleChannel{}
-							channel.SetSessionID(inputs[2])
-							channel.SetFileName(inputs[3])
-							channel.Open()
-							log.AddChannel(channel)
-							//logger := kitlog.NewLogfmtLogger(f1)
-							//logger = kitlog.With(logger, "session_id", inputs[2], "ts", kitlog.DefaultTimestampUTC)
-							//log.AddLog(logger)
-						}
+				if len(inputs) >= 2 {
+					fmt.Println(fmt.Sprintf("Logged to '%s' with %s", inputs[0], inputs[1]))
+					if strings.ToLower(inputs[0]) == "debug" {
+						log.LogDebugf("main()", "'%s'", inputs[1])
+					} else if strings.ToLower(inputs[0]) == "info" {
+						log.LogInfof("main()", "'%s'", inputs[1])
+					} else if strings.ToLower(inputs[0]) == "error" {
+						log.LogErrorf("main()", "'%s'", inputs[1])
+					} else if strings.ToLower(inputs[0]) == "warn" {
+						log.LogWarnf("main()", "'%s'", inputs[1])
+					} else if strings.ToLower(inputs[0]) == "add" && strings.ToLower(inputs[1]) == "session" {
+						channel := &sl.SimpleChannel{}
+						channel.SetSessionID(inputs[2])
+						channel.SetFileName(inputs[3])
+						channel.Open()
+						log.AddChannel(channel)
+						//logger := kitlog.NewLogfmtLogger(f1)
+						//logger = kitlog.With(logger, "session_id", inputs[2], "ts", kitlog.DefaultTimestampUTC)
+						//log.AddLog(logger)
+					}
 				} else {
 					fmt.Println(fmt.Sprintf("'%s' was split but only had %d inputs", text, len(inputs)))
 					log.LogDebugf("main()", "'%s' was split but only had %d inputs", text, len(inputs))
