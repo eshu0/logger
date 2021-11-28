@@ -18,7 +18,7 @@ type AppLogger struct {
 */
 
 // the logging functions are here
-func (al *AppLogger) StartLogging() {
+func (al AppLogger) StartLogging() {
 
 	if al.Log == nil {
 		log := NewApplicationNowLogger()
@@ -35,7 +35,7 @@ func (al *AppLogger) StartLogging() {
 }
 
 // the logging functions are here
-func (al *AppLogger) FinishLogging() {
+func (al AppLogger) FinishLogging() {
 
 	if al.Log != nil {
 		al.Log.CloseAllChannels()
@@ -47,7 +47,7 @@ func (al *AppLogger) FinishLogging() {
 */
 
 // the logging functions are here
-func (al *AppLogger) LogDebug(cmd string, data ...interface{}) {
+func (al AppLogger) LogDebug(cmd string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -56,7 +56,7 @@ func (al *AppLogger) LogDebug(cmd string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger) LogWarn(cmd string, data ...interface{}) {
+func (al AppLogger) LogWarn(cmd string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -65,7 +65,7 @@ func (al *AppLogger) LogWarn(cmd string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger) LogInfo(cmd string, data ...interface{}) {
+func (al AppLogger) LogInfo(cmd string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -74,7 +74,7 @@ func (al *AppLogger) LogInfo(cmd string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger) LogError(cmd string, data ...interface{}) {
+func (al AppLogger) LogError(cmd string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -84,7 +84,7 @@ func (al *AppLogger) LogError(cmd string, data ...interface{}) {
 }
 
 // This Log error allows errors to be logged .Error() is the data written
-func (al *AppLogger) LogErrorE(cmd string, data error) {
+func (al AppLogger) LogErrorE(cmd string, data error) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -94,7 +94,7 @@ func (al *AppLogger) LogErrorE(cmd string, data error) {
 }
 
 // This Log error allows errors to be logged .Error() is the data written
-func (al *AppLogger) LogErrorEf(cmd string, msg string, e error) {
+func (al AppLogger) LogErrorEf(cmd string, msg string, e error) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -104,7 +104,7 @@ func (al *AppLogger) LogErrorEf(cmd string, msg string, e error) {
 }
 
 // the logging functions are here
-func (al *AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
+func (al AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -113,7 +113,7 @@ func (al *AppLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
+func (al AppLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -122,7 +122,7 @@ func (al *AppLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger) LogInfof(cmd string, msg string, data ...interface{}) {
+func (al AppLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}
@@ -131,7 +131,7 @@ func (al *AppLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 	}
 }
 
-func (al *AppLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
+func (al AppLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	if !al.Started {
 		al.StartLogging()
 	}

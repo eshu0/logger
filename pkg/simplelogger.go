@@ -32,13 +32,13 @@ type SimpleLogger struct {
 
 // This is the simplest application log generator
 // The os.args[0] is used for filename and the session is random
-func NewApplicationLogger() *SimpleLogger {
+func NewApplicationLogger() SimpleLogger {
 	return NewApplicationSessionLogger(RandomSessionID())
 }
 
 // This is application log generator when the session is required
 // The os.args[0] is used for filename
-func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
+func NewApplicationSessionLogger(sessionid string) SimpleLogger {
 
 	appname, err := os.Executable()
 
@@ -49,11 +49,11 @@ func NewApplicationSessionLogger(sessionid string) *SimpleLogger {
 	return NewSimpleLogger(appname+".log", sessionid)
 }
 
-func NewApplicationNowLogger() *SimpleLogger {
+func NewApplicationNowLogger() SimpleLogger {
 	return NewAppSessionNowLogger(RandomSessionID())
 }
 
-func NewAppSessionNowLogger(sessionid string) *SimpleLogger {
+func NewAppSessionNowLogger(sessionid string) SimpleLogger {
 
 	appname, err := os.Executable()
 
@@ -64,11 +64,11 @@ func NewAppSessionNowLogger(sessionid string) *SimpleLogger {
 	return NewSimpleLogger(filename+".log", sessionid)
 }
 
-func NewApplicationDayLogger() *SimpleLogger {
+func NewApplicationDayLogger() SimpleLogger {
 	return NewAppSessionDayLogger(RandomSessionID())
 }
 
-func NewAppSessionDayLogger(sessionid string) *SimpleLogger {
+func NewAppSessionDayLogger(sessionid string) SimpleLogger {
 
 	appname, err := os.Executable()
 
@@ -80,13 +80,13 @@ func NewAppSessionDayLogger(sessionid string) *SimpleLogger {
 }
 
 // This lets you specify the filename and the session
-func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
+func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 
 	ssl := &SimpleLogger{}
 
 	channels := make(map[string]sli.ISimpleChannel)
 
-	lg := &SimpleChannel{}
+	lg := SimpleChannel{}
 	lg.SetFileName(filename)
 	lg.SetSessionID(sessionid)
 
@@ -103,19 +103,19 @@ func NewSimpleLogger(filename string, sessionid string) *SimpleLogger {
 	SIMPLE LOG CHANNELS
 */
 
-func (ssl *SimpleLogger) AddChannel(log sli.ISimpleChannel) {
+func (ssl SimpleLogger) AddChannel(log sli.ISimpleChannel) {
 	ssl.channels[log.GetSessionID()] = log
 }
 
-func (ssl *SimpleLogger) GetChannel(sessionid string) sli.ISimpleChannel {
+func (ssl SimpleLogger) GetChannel(sessionid string) sli.ISimpleChannel {
 	return ssl.channels[sessionid]
 }
 
-func (ssl *SimpleLogger) GetChannels() map[string]sli.ISimpleChannel {
+func (ssl SimpleLogger) GetChannels() map[string]sli.ISimpleChannel {
 	return ssl.channels
 }
 
-func (ssl *SimpleLogger) GetSessionIDs() []string {
+func (ssl SimpleLogger) GetSessionIDs() []string {
 	var keys []string
 	for k := range ssl.channels {
 		keys = append(keys, k)
@@ -123,7 +123,7 @@ func (ssl *SimpleLogger) GetSessionIDs() []string {
 	return keys
 }
 
-func (ssl *SimpleLogger) SetChannelLogLevel(sessionid string, lvl kitlevel.Option) {
+func (ssl SimpleLogger) SetChannelLogLevel(sessionid string, lvl kitlevel.Option) {
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
 
@@ -138,7 +138,7 @@ func (ssl *SimpleLogger) SetChannelLogLevel(sessionid string, lvl kitlevel.Optio
 	}
 }
 
-func (ssl *SimpleLogger) GetChannelLogLevel(sessionid string) kitlevel.Option {
+func (ssl SimpleLogger) GetChannelLogLevel(sessionid string) kitlevel.Option {
 	for _, channel := range ssl.channels {
 		if channel.GetSessionID() == sessionid {
 			return channel.GetLogLevel()
@@ -162,15 +162,15 @@ func RandomSessionID() string {
 	return string(b)
 }
 
-func (ssl *SimpleLogger) GetPrintToScreen() sli.PrintLevel {
+func (ssl SimpleLogger) GetPrintToScreen() sli.PrintLevel {
 	return ssl.printtoscreen
 }
 
-func (ssl *SimpleLogger) SetPrintToScreen(toggle sli.PrintLevel) {
+func (ssl SimpleLogger) SetPrintToScreen(toggle sli.PrintLevel) {
 	ssl.printtoscreen = toggle
 }
 
-func (ssl *SimpleLogger) CloseChannel(sessionid string) {
+func (ssl SimpleLogger) CloseChannel(sessionid string) {
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
 		if sessionid == "" {
@@ -183,11 +183,11 @@ func (ssl *SimpleLogger) CloseChannel(sessionid string) {
 	}
 }
 
-func (ssl *SimpleLogger) CloseAllChannels() {
+func (ssl SimpleLogger) CloseAllChannels() {
 	ssl.CloseChannel("")
 }
 
-func (ssl *SimpleLogger) OpenChannel(sessionid string) {
+func (ssl SimpleLogger) OpenChannel(sessionid string) {
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
 
@@ -201,22 +201,22 @@ func (ssl *SimpleLogger) OpenChannel(sessionid string) {
 	}
 }
 
-func (ssl *SimpleLogger) OpenAllChannels() {
+func (ssl SimpleLogger) OpenAllChannels() {
 	ssl.OpenChannel("")
 }
 
-func (ssl *SimpleLogger) SetLogLevel(lvl kitlevel.Option) {
+func (ssl SimpleLogger) SetLogLevel(lvl kitlevel.Option) {
 	ssl.globallevel = lvl
 	ssl.SetChannelLogLevel("", lvl)
 }
 
-func (ssl *SimpleLogger) GetLogLevel() kitlevel.Option {
+func (ssl SimpleLogger) GetLogLevel() kitlevel.Option {
 	return ssl.globallevel
 }
 
-func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) {
+func (ssl SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) {
 
-	channel := &SimpleChannel{}
+	channel := SimpleChannel{}
 	channel.SetFileName(logfilename)
 	channel.SetSessionID(sessionid)
 	channel.Open()
@@ -232,7 +232,7 @@ func (ssl *SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string
 */
 
 // I am not sure i like this method too much however it works
-func log(ssl *SimpleLogger, lvl string, cmd string, msg string, data ...interface{}) {
+func log(ssl SimpleLogger, lvl string, cmd string, msg string, data ...interface{}) {
 
 	for _, channel := range ssl.channels {
 		log := channel.GetLog()
@@ -287,7 +287,7 @@ func printscreenfmt(lvl string, cmd string, msg string) {
 	}
 }
 
-func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
+func printscreen(ssl SimpleLogger, lvl string, cmd string, msg string) {
 	if ssl.GetPrintToScreen() == sli.PrintNone {
 		return
 	}
@@ -318,45 +318,45 @@ func printscreen(ssl *SimpleLogger, lvl string, cmd string, msg string) {
 }
 
 // the logging functions are here
-func (ssl *SimpleLogger) LogDebug(cmd string, data ...interface{}) {
+func (ssl SimpleLogger) LogDebug(cmd string, data ...interface{}) {
 	log(ssl, "debug", cmd, "%s", data...)
 }
 
-func (ssl *SimpleLogger) LogWarn(cmd string, data ...interface{}) {
+func (ssl SimpleLogger) LogWarn(cmd string, data ...interface{}) {
 	log(ssl, "warn", cmd, "%s", data...)
 }
 
-func (ssl *SimpleLogger) LogInfo(cmd string, data ...interface{}) {
+func (ssl SimpleLogger) LogInfo(cmd string, data ...interface{}) {
 	log(ssl, "info", cmd, "%s", data...)
 }
 
-func (ssl *SimpleLogger) LogError(cmd string, data ...interface{}) {
+func (ssl SimpleLogger) LogError(cmd string, data ...interface{}) {
 	log(ssl, "error", cmd, "%s", data...)
 }
 
 // This Log error allows errors to be logged .Error() is the data written
-func (ssl *SimpleLogger) LogErrorE(cmd string, e error) {
+func (ssl SimpleLogger) LogErrorE(cmd string, e error) {
 	log(ssl, "error", cmd, "%s", e.Error())
 }
 
 // This Log error allows errors to be logged where .Error() will be passed into the string
-func (ssl *SimpleLogger) LogErrorEf(cmd string, msg string, e error) {
+func (ssl SimpleLogger) LogErrorEf(cmd string, msg string, e error) {
 	log(ssl, "error", cmd, msg, e.Error())
 }
 
 // the logging functions are here
-func (ssl *SimpleLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
+func (ssl SimpleLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
 	log(ssl, "debugf", cmd, msg, data...)
 }
 
-func (ssl *SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
+func (ssl SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
 	log(ssl, "warnf", cmd, msg, data...)
 }
 
-func (ssl *SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
+func (ssl SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
 	log(ssl, "infof", cmd, msg, data...)
 }
 
-func (ssl *SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
+func (ssl SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
 	log(ssl, "errorf", cmd, msg, data...)
 }

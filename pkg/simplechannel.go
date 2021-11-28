@@ -34,46 +34,46 @@ type SimpleChannel struct {
  Channel Functions after here
 */
 
-func (lo *SimpleChannel) SetFileName(filename string) {
+func (lo SimpleChannel) SetFileName(filename string) {
 	lo.filename = filename
 }
 
-func (lo *SimpleChannel) GetFileName() string {
+func (lo SimpleChannel) GetFileName() string {
 	return lo.filename
 }
 
-func (lo *SimpleChannel) SetSessionID(sessionid string) {
+func (lo SimpleChannel) SetSessionID(sessionid string) {
 	lo.sessionid = sessionid
 }
 
-func (lo *SimpleChannel) GetSessionID() string {
+func (lo SimpleChannel) GetSessionID() string {
 	return lo.sessionid
 }
 
-func (lo *SimpleChannel) SetLogLevel(lvl kitlevel.Option) {
+func (lo SimpleChannel) SetLogLevel(lvl kitlevel.Option) {
 	lo.level = lvl
 	lo.log = kitlevel.NewFilter(lo.log, lvl)
 }
 
-func (lo *SimpleChannel) GetLogLevel() kitlevel.Option {
+func (lo SimpleChannel) GetLogLevel() kitlevel.Option {
 	return lo.level
 }
 
-func (lo *SimpleChannel) SetLog(log kitlog.Logger) {
+func (lo SimpleChannel) SetLog(log kitlog.Logger) {
 	lo.log = log
 }
 
-func (lo *SimpleChannel) GetLog() kitlog.Logger {
+func (lo SimpleChannel) GetLog() kitlog.Logger {
 	return lo.log
 }
 
-func (lo *SimpleChannel) Close() {
+func (lo SimpleChannel) Close() {
 	if lo.fileptr != nil {
 		lo.fileptr.Close()
 	}
 }
 
-func (lo *SimpleChannel) Open() {
+func (lo SimpleChannel) Open() {
 
 	f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	// check error
