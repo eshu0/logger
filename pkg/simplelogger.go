@@ -7,7 +7,7 @@ import (
 	"time"
 
 	sli "github.com/eshu0/logger/pkg/interfaces"
-	kitlevel "github.com/go-kit/kit/log/level"
+	kitlevel "github.com/go-kit/log/level"
 )
 
 type SimpleLogger struct {
@@ -188,15 +188,15 @@ func (ssl SimpleLogger) CloseAllChannels() {
 }
 
 func (ssl SimpleLogger) OpenChannel(sessionid string) {
-	// have to set the filter for the level
-	for _, channel := range ssl.channels {
 
-		if sessionid == "" {
-			channel.Open()
-		} else {
+	for _, channel := range ssl.channels {
+		// have to set the filter for the channel
+		if len(sessionid) > 0 {
 			if channel.GetSessionID() == sessionid {
 				channel.Open()
 			}
+		} else {
+			channel.Open()
 		}
 	}
 }

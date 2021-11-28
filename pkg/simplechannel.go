@@ -4,8 +4,8 @@ import (
 	"os"
 
 	sli "github.com/eshu0/logger/pkg/interfaces"
-	kitlog "github.com/go-kit/kit/log"
-	kitlevel "github.com/go-kit/kit/log/level"
+	kitlog "github.com/go-kit/log"
+	kitlevel "github.com/go-kit/log/level"
 )
 
 // Simple Channel represents and output channel to be logged to

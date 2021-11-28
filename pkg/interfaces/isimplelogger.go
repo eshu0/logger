@@ -1,7 +1,7 @@
 package slinterfaces
 
 import (
-	kitlevel "github.com/go-kit/kit/log/level"
+	kitlevel "github.com/go-kit/log/level"
 )
 
 type PrintLevel int

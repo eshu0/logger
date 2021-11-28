@@ -1,13 +1,12 @@
 package slinterfaces
 
 import (
-	kitlog "github.com/go-kit/kit/log"
-	kitlevel "github.com/go-kit/kit/log/level"
+	kitlog "github.com/go-kit/log"
+	kitlevel "github.com/go-kit/log/level"
 )
 
 // main interface for the Simple Channel
 type ISimpleChannel interface {
-
 	GetLog() kitlog.Logger
 	SetLog(log kitlog.Logger)
 
