@@ -105,5 +105,10 @@ func (sc SimpleChannel) Open() (sli.ISimpleChannel, error) {
 }
 
 func (sc SimpleChannel) GetDetails() string {
-	return fmt.Sprintf("%s : %s", sc.sessionid, sc.filename)
+	fileptr := "nil"
+	if sc.fileptr != nil {
+		fileptr = "has value"
+	}
+
+	return fmt.Sprintf("%s : %s : %s :%v", sc.sessionid, sc.filename, fileptr, sc.log)
 }
