@@ -76,23 +76,27 @@ func (lo SimpleChannel) Close() {
 
 func (lo SimpleChannel) Open() {
 
-	f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if len(lo.filename) > 0 {
+		f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
-	// check error
-	if err != nil {
-		fmt.Printf("Err %v for %s", err, lo.filename)
-		panic(err)
+		// check error
+		if err != nil {
+			fmt.Printf("Err %v for %s\n", err, lo.filename)
+			panic(err)
+		}
+
+		logger := kitlog.NewLogfmtLogger(f)                                                        //(f, session.ID()+" ", log.LstdFlags)
+		logger = kitlog.With(logger, "session_id", lo.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
+
+		// check log is valid
+		if logger == nil {
+			panic("logger is nil")
+		}
+
+		lo.SetLog(logger)
+		lo.fileptr = f
+	} else {
+		panic("")
 	}
-
-	logger := kitlog.NewLogfmtLogger(f)                                                        //(f, session.ID()+" ", log.LstdFlags)
-	logger = kitlog.With(logger, "session_id", lo.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
-
-	// check log is valid
-	if logger == nil {
-		panic("logger is nil")
-	}
-
-	lo.SetLog(logger)
-	lo.fileptr = f
 
 }
