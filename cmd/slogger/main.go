@@ -56,13 +56,13 @@ func main() {
 				if strings.ToLower(inputs[0]) == "sessionids" {
 					sessionids := log.GetSessionIDs()
 					for _, SessionID := range sessionids {
-						fmt.Println(fmt.Sprintf("'%s'", SessionID))
+						fmt.Printf("'%s'", SessionID)
 						log.LogInfof("main()", "Get Session ID: '%s'", SessionID)
 					}
 				} else if strings.ToLower(inputs[0]) == "sessions" {
 					for _, channel := range log.GetChannels() {
-						fmt.Println(fmt.Sprintf("Session ID: '%s'", channel.GetSessionID()))
-						fmt.Println(fmt.Sprintf("FileName: '%s'", channel.GetFileName()))
+						fmt.Printf("Session ID: '%s'", channel.GetSessionID())
+						fmt.Printf("FileName: '%s'", channel.GetFileName())
 						fmt.Println("----")
 						log.LogInfof("main()", "Get Session: '%s'", channel.GetSessionID())
 						log.LogInfof("main()", "Get FileName: '%s'", channel.GetFileName())
@@ -88,7 +88,7 @@ func main() {
 			} else {
 
 				if len(inputs) >= 2 {
-					fmt.Println(fmt.Sprintf("Logged to '%s' with %s", inputs[0], inputs[1]))
+					fmt.Printf("Logged to '%s' with %s", inputs[0], inputs[1])
 					if strings.ToLower(inputs[0]) == "debug" {
 						log.LogDebugf("main()", "'%s'", inputs[1])
 					} else if strings.ToLower(inputs[0]) == "info" {
@@ -98,7 +98,7 @@ func main() {
 					} else if strings.ToLower(inputs[0]) == "warn" {
 						log.LogWarnf("main()", "'%s'", inputs[1])
 					} else if strings.ToLower(inputs[0]) == "add" && strings.ToLower(inputs[1]) == "session" {
-						channel := &sl.SimpleChannel{}
+						channel := sl.SimpleChannel{}
 						channel.SetSessionID(inputs[2])
 						channel.SetFileName(inputs[3])
 						channel.Open()
@@ -108,7 +108,7 @@ func main() {
 						//log.AddLog(logger)
 					}
 				} else {
-					fmt.Println(fmt.Sprintf("'%s' was split but only had %d inputs", text, len(inputs)))
+					fmt.Printf("'%s' was split but only had %d inputs", text, len(inputs))
 					log.LogDebugf("main()", "'%s' was split but only had %d inputs", text, len(inputs))
 				}
 			}
