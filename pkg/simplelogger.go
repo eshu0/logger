@@ -82,7 +82,7 @@ func NewAppSessionDayLogger(sessionid string) SimpleLogger {
 // This lets you specify the filename and the session
 func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 
-	ssl := &SimpleLogger{}
+	ssl := SimpleLogger{}
 
 	channels := make(map[string]sli.ISimpleChannel)
 
