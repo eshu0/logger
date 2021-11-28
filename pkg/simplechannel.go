@@ -1,6 +1,7 @@
 package simplelogger
 
 import (
+	"fmt"
 	"os"
 
 	sli "github.com/eshu0/logger/pkg/interfaces"
@@ -76,8 +77,10 @@ func (lo SimpleChannel) Close() {
 func (lo SimpleChannel) Open() {
 
 	f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
 	// check error
 	if err != nil {
+		fmt.Printf("Err %v for %s", err, lo.filename)
 		panic(err)
 	}
 
