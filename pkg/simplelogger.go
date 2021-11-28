@@ -10,6 +10,20 @@ import (
 	kitlevel "github.com/go-kit/log/level"
 )
 
+const (
+	LOG_EXTENSION = ".log"
+	CMD_STRING    = "cmd"
+	DATA_STRING   = "data"
+	CASE_DEBUG    = "debug"
+	CASE_WARN     = "warn"
+	CASE_INFO     = "info"
+	CASE_ERROR    = "error"
+	CASE_DEBUGF   = "debugf"
+	CASE_WARNF    = "warnf"
+	CASE_INFOF    = "infof"
+	CASE_ERRORF   = "errorf"
+)
+
 type SimpleLogger struct {
 
 	//inherit from interface
@@ -46,7 +60,7 @@ func NewApplicationSessionLogger(sessionid string) SimpleLogger {
 		appname = "unknown"
 	}
 
-	return NewSimpleLogger(appname+".log", sessionid)
+	return NewSimpleLogger(appname+LOG_EXTENSION, sessionid)
 }
 
 func NewApplicationNowLogger() SimpleLogger {
@@ -61,7 +75,7 @@ func NewAppSessionNowLogger(sessionid string) SimpleLogger {
 		appname = "unknown"
 	}
 	filename := appname + "-" + time.Now().Format("2006-01-02-15-04-05")
-	return NewSimpleLogger(filename+".log", sessionid)
+	return NewSimpleLogger(filename+LOG_EXTENSION, sessionid)
 }
 
 func NewApplicationDayLogger() SimpleLogger {
@@ -76,7 +90,7 @@ func NewAppSessionDayLogger(sessionid string) SimpleLogger {
 		appname = "unknown"
 	}
 	filename := appname + "-" + time.Now().Format("2006-01-02")
-	return NewSimpleLogger(filename+".log", sessionid)
+	return NewSimpleLogger(filename+LOG_EXTENSION, sessionid)
 }
 
 // This lets you specify the filename and the session
@@ -239,38 +253,30 @@ func log(ssl SimpleLogger, lvl string, cmd string, msg string, data ...interface
 
 		if log != nil {
 			switch lvl {
-			case "debug":
-				kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+			case CASE_DEBUG:
+				kitlevel.Debug(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf("%s", data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-				break
-			case "warn":
-				kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+			case CASE_WARN:
+				kitlevel.Warn(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf("%s", data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-				break
-			case "info":
-				kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+			case CASE_INFO:
+				kitlevel.Info(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf("%s", data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-				break
-			case "error":
-				kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf("%s", data...))
+			case CASE_ERROR:
+				kitlevel.Error(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf("%s", data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf("%s", data...))
-				break
-			case "debugf":
-				kitlevel.Debug(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+			case CASE_DEBUGF:
+				kitlevel.Debug(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf(msg, data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...))
-				break
-			case "warnf":
-				kitlevel.Warn(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+			case CASE_WARNF:
+				kitlevel.Warn(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf(msg, data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...))
-				break
-			case "infof":
-				kitlevel.Info(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+			case CASE_INFOF:
+				kitlevel.Info(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf(msg, data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...))
-				break
-			case "errorf":
-				kitlevel.Error(log).Log("cmd", cmd, "data", fmt.Sprintf(msg, data...))
+			case CASE_ERRORF:
+				kitlevel.Error(log).Log(CMD_STRING, cmd, DATA_STRING, fmt.Sprintf(msg, data...))
 				printscreen(ssl, lvl, cmd, fmt.Sprintf(msg, data...))
-				break
 			}
 		} else {
 			printscreen(ssl, lvl, "log", fmt.Sprintf("log nil %s", channel.GetSessionID()))
@@ -280,10 +286,10 @@ func log(ssl SimpleLogger, lvl string, cmd string, msg string, data ...interface
 }
 
 func printscreenfmt(lvl string, cmd string, msg string) {
-	if msg != "" {
-		fmt.Println(fmt.Sprintf("%s: %s - %s", lvl, cmd, msg))
+	if len(msg) > 0 {
+		fmt.Printf("%s: %s - %s\n", lvl, cmd, msg)
 	} else {
-		fmt.Println(fmt.Sprintf("%s: - %s", lvl, cmd))
+		fmt.Printf("%s: - %s\n", lvl, cmd)
 	}
 }
 
@@ -293,25 +299,25 @@ func printscreen(ssl SimpleLogger, lvl string, cmd string, msg string) {
 	}
 
 	switch lvl {
-	case "debug":
+	case CASE_DEBUG:
 		if ssl.GetPrintToScreen() == sli.PrintDebug {
 			printscreenfmt("Debug", cmd, msg)
 		}
-	case "warn":
+	case CASE_WARN:
 		printscreenfmt("Warning", cmd, msg)
-	case "info":
+	case CASE_INFO:
 		printscreenfmt("Info", cmd, msg)
-	case "error":
+	case CASE_ERROR:
 		printscreenfmt("Error", cmd, msg)
-	case "debugf":
+	case CASE_DEBUGF:
 		if ssl.GetPrintToScreen() == sli.PrintDebug {
 			printscreenfmt("Debug", cmd, msg)
 		}
-	case "warnf":
+	case CASE_WARNF:
 		printscreenfmt("Warning", cmd, msg)
-	case "infof":
+	case CASE_INFOF:
 		printscreenfmt("Info", cmd, msg)
-	case "errorf":
+	case CASE_ERRORF:
 		printscreenfmt("Error", cmd, msg)
 	}
 
@@ -319,44 +325,44 @@ func printscreen(ssl SimpleLogger, lvl string, cmd string, msg string) {
 
 // the logging functions are here
 func (ssl SimpleLogger) LogDebug(cmd string, data ...interface{}) {
-	log(ssl, "debug", cmd, "%s", data...)
+	log(ssl, CASE_DEBUG, cmd, "%s", data...)
 }
 
 func (ssl SimpleLogger) LogWarn(cmd string, data ...interface{}) {
-	log(ssl, "warn", cmd, "%s", data...)
+	log(ssl, CASE_WARN, cmd, "%s", data...)
 }
 
 func (ssl SimpleLogger) LogInfo(cmd string, data ...interface{}) {
-	log(ssl, "info", cmd, "%s", data...)
+	log(ssl, CASE_INFO, cmd, "%s", data...)
 }
 
 func (ssl SimpleLogger) LogError(cmd string, data ...interface{}) {
-	log(ssl, "error", cmd, "%s", data...)
+	log(ssl, CASE_ERROR, cmd, "%s", data...)
 }
 
 // This Log error allows errors to be logged .Error() is the data written
 func (ssl SimpleLogger) LogErrorE(cmd string, e error) {
-	log(ssl, "error", cmd, "%s", e.Error())
+	log(ssl, CASE_ERROR, cmd, "%s", e.Error())
 }
 
 // This Log error allows errors to be logged where .Error() will be passed into the string
 func (ssl SimpleLogger) LogErrorEf(cmd string, msg string, e error) {
-	log(ssl, "error", cmd, msg, e.Error())
+	log(ssl, CASE_ERROR, cmd, msg, e.Error())
 }
 
 // the logging functions are here
 func (ssl SimpleLogger) LogDebugf(cmd string, msg string, data ...interface{}) {
-	log(ssl, "debugf", cmd, msg, data...)
+	log(ssl, CASE_DEBUGF, cmd, msg, data...)
 }
 
 func (ssl SimpleLogger) LogWarnf(cmd string, msg string, data ...interface{}) {
-	log(ssl, "warnf", cmd, msg, data...)
+	log(ssl, CASE_WARNF, cmd, msg, data...)
 }
 
 func (ssl SimpleLogger) LogInfof(cmd string, msg string, data ...interface{}) {
-	log(ssl, "infof", cmd, msg, data...)
+	log(ssl, CASE_INFOF, cmd, msg, data...)
 }
 
 func (ssl SimpleLogger) LogErrorf(cmd string, msg string, data ...interface{}) {
-	log(ssl, "errorf", cmd, msg, data...)
+	log(ssl, CASE_ERRORF, cmd, msg, data...)
 }
