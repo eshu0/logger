@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	sli "github.com/eshu0/simplelogger/pkg/interfaces"
+	sli "github.com/eshu0/logger/pkg/interfaces"
 	kitlevel "github.com/go-kit/kit/log/level"
 )
 

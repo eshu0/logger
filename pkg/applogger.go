@@ -1,7 +1,7 @@
 package simplelogger
 
 import (
-	sli "github.com/eshu0/simplelogger/pkg/interfaces"
+	sli "github.com/eshu0/logger/pkg/interfaces"
 )
 
 type AppLogger struct {

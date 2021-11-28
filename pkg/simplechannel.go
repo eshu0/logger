@@ -3,7 +3,7 @@ package simplelogger
 import (
 	"os"
 
-	sli "github.com/eshu0/simplelogger/pkg/interfaces"
+	sli "github.com/eshu0/logger/pkg/interfaces"
 	kitlog "github.com/go-kit/kit/log"
 	kitlevel "github.com/go-kit/kit/log/level"
 )
