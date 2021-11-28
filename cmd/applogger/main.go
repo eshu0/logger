@@ -10,11 +10,12 @@ type TestApp struct {
 
 func main() {
 	ta := TestApp{}
-
 	ta.LogInfo("Logging Info!")
 	ta.LogError("Logging Error!")
 	ta.LogDebug("Logging Debug!")
 	ta.LogWarn("Logging LogWarn!")
-
+	if ta.Log != nil {
+		ta.Log.PrintDetails()
+	}
 	ta.FinishLogging()
 }
