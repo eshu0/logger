@@ -141,13 +141,12 @@ func (ssl SimpleLogger) SetChannelLogLevel(sessionid string, lvl kitlevel.Option
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
 
-		if sessionid == "" {
-			channel.SetLogLevel(lvl)
-		} else {
+		if len(sessionid) > 0 {
 			if channel.GetSessionID() == sessionid {
 				channel.SetLogLevel(lvl)
-
 			}
+		} else {
+			channel.SetLogLevel(lvl)
 		}
 	}
 }
