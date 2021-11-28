@@ -100,10 +100,11 @@ func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 
 	channels := make(map[string]sli.ISimpleChannel)
 
-	lg := SimpleChannel{}
-	lg.SetFileName(filename)
-	lg.SetSessionID(sessionid)
+	lg := SimpleChannel{filename: filename, sessionid: sessionid}
+	//lg.SetFileName(filename)
+	//lg.SetSessionID(sessionid)
 
+	fmt.Println(lg.GetDetails())
 	channels[lg.sessionid] = lg
 
 	ssl.channels = channels
@@ -116,6 +117,12 @@ func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 /*
 	SIMPLE LOG CHANNELS
 */
+
+func (ssl SimpleLogger) PrintDetails() {
+	for key, channel := range ssl.channels {
+		fmt.Printf("[%s] = %s ", key, channel.GetDetails())
+	}
+}
 
 func (ssl SimpleLogger) AddChannel(log sli.ISimpleChannel) {
 	ssl.channels[log.GetSessionID()] = log

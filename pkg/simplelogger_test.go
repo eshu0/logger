@@ -4,9 +4,10 @@ import (
 	"testing"
 )
 
-func TestLoadConfig(t *testing.T) {
+func TestNewSimpleLogger(t *testing.T) {
 
 	log := NewSimpleLogger("slogger.log", "123")
+	log.PrintDetails()
 
 	// lets open a file log using the session
 	openerrors := log.OpenAllChannels()

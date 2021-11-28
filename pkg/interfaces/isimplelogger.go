@@ -44,4 +44,5 @@ type ISimpleLogger interface {
 	GetChannel(sessionid string) ISimpleChannel
 	GetChannels() map[string]ISimpleChannel
 	SetChannelLogLevel(sessionid string, lvl kitlevel.Option)
+	PrintDetails()
 }

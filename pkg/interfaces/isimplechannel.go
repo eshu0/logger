@@ -22,4 +22,6 @@ type ISimpleChannel interface {
 
 	Open() error
 	Close() error
+
+	GetDetails() string
 }

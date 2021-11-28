@@ -2,6 +2,7 @@ package simplelogger
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	sli "github.com/eshu0/logger/pkg/interfaces"
@@ -35,51 +36,50 @@ type SimpleChannel struct {
  Channel Functions after here
 */
 
-func (lo SimpleChannel) SetFileName(filename string) {
-	lo.filename = filename
+//func (sc SimpleChannel) SetFileName(filename string) {
+//	sc.filename = filename
+//}
+
+//func (sc SimpleChannel) GetFileName() string {
+//	return sc.filename
+//}
+
+func (sc SimpleChannel) SetSessionID(sessionid string) {
+	sc.sessionid = sessionid
 }
 
-func (lo SimpleChannel) GetFileName() string {
-	return lo.filename
+func (sc SimpleChannel) GetSessionID() string {
+	return sc.sessionid
 }
 
-func (lo SimpleChannel) SetSessionID(sessionid string) {
-	lo.sessionid = sessionid
+func (sc SimpleChannel) SetLogLevel(lvl kitlevel.Option) {
+	sc.level = lvl
+	sc.log = kitlevel.NewFilter(sc.log, lvl)
 }
 
-func (lo SimpleChannel) GetSessionID() string {
-	return lo.sessionid
+func (sc SimpleChannel) GetLogLevel() kitlevel.Option {
+	return sc.level
 }
 
-func (lo SimpleChannel) SetLogLevel(lvl kitlevel.Option) {
-	lo.level = lvl
-	lo.log = kitlevel.NewFilter(lo.log, lvl)
+func (sc SimpleChannel) SetLog(log kitlog.Logger) {
+	sc.log = log
 }
 
-func (lo SimpleChannel) GetLogLevel() kitlevel.Option {
-	return lo.level
+func (sc SimpleChannel) GetLog() kitlog.Logger {
+	return sc.log
 }
 
-func (lo SimpleChannel) SetLog(log kitlog.Logger) {
-	lo.log = log
-}
-
-func (lo SimpleChannel) GetLog() kitlog.Logger {
-	return lo.log
-}
-
-func (lo SimpleChannel) Close() error {
-	if lo.fileptr != nil {
-		return lo.fileptr.Close()
+func (sc SimpleChannel) Close() error {
+	if sc.fileptr != nil {
+		return sc.fileptr.Close()
 	}
-
 	return nil
 }
 
-func (lo SimpleChannel) Open() error {
+func (sc SimpleChannel) Open() error {
 
-	if len(lo.filename) > 0 {
-		f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if len(sc.filename) > 0 {
+		f, err := os.OpenFile(sc.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 		// check error
 		if err != nil {
@@ -87,19 +87,23 @@ func (lo SimpleChannel) Open() error {
 		}
 
 		logger := kitlog.NewLogfmtLogger(f)                                                        //(f, session.ID()+" ", log.LstdFlags)
-		logger = kitlog.With(logger, "session_id", lo.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
+		logger = kitlog.With(logger, "session_id", sc.sessionid, "ts", kitlog.DefaultTimestampUTC) //, "caller", kitlog.DefaultCaller)
 
 		// check log is valid
 		if logger == nil {
 			return errors.New("logger is nil")
 		}
 
-		lo.SetLog(logger)
-		lo.fileptr = f
+		sc.SetLog(logger)
+		sc.fileptr = f
 		return nil
 
 	} else {
 		return errors.New("filename was missing from the channel")
 	}
 
+}
+
+func (sc SimpleChannel) GetDetails() string {
+	return fmt.Sprintf("%s : %s", sc.sessionid, sc.filename)
 }
