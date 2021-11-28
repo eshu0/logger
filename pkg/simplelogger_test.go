@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestNewSimpleLogger(t *testing.T) {
+func TestNewSimpleLoggerOpenClose(t *testing.T) {
 
 	log := NewSimpleLogger("slogger.log", "123")
 	log.PrintDetails()

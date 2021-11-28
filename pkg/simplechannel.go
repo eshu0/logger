@@ -76,14 +76,14 @@ func (sc SimpleChannel) Close() error {
 	return nil
 }
 
-func (sc SimpleChannel) Open() error {
+func (sc SimpleChannel) Open() (sli.ISimpleChannel, error) {
 
 	if len(sc.filename) > 0 {
 		f, err := os.OpenFile(sc.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 		// check error
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		logger := kitlog.NewLogfmtLogger(f)                                                        //(f, session.ID()+" ", log.LstdFlags)
@@ -91,15 +91,15 @@ func (sc SimpleChannel) Open() error {
 
 		// check log is valid
 		if logger == nil {
-			return errors.New("logger is nil")
+			return nil, errors.New("logger is nil")
 		}
-
-		sc.SetLog(logger)
-		sc.fileptr = f
-		return nil
+		newchannel := SimpleChannel{filename: sc.filename, sessionid: sc.sessionid, log: logger, fileptr: f}
+		//sc.SetLog(logger)
+		//sc.fileptr = f
+		return newchannel, nil
 
 	} else {
-		return errors.New("filename was missing from the channel")
+		return nil, errors.New("filename was missing from the channel")
 	}
 
 }

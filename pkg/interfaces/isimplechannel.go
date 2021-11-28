@@ -11,16 +11,16 @@ type ISimpleChannel interface {
 	SetLog(log kitlog.Logger)
 
 	GetFileName() string
-	SetFileName(sessionid string)
+	//SetFileName(sessionid string)
 
 	GetSessionID() string
-	SetSessionID(sessionid string)
+	//SetSessionID(sessionid string)
 
 	//log functions
 	GetLogLevel() kitlevel.Option
 	SetLogLevel(kitlevel.Option)
 
-	Open() error
+	Open() (ISimpleChannel, error)
 	Close() error
 
 	GetDetails() string

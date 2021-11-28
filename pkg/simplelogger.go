@@ -103,8 +103,7 @@ func NewSimpleLogger(filename string, sessionid string) SimpleLogger {
 	lg := SimpleChannel{filename: filename, sessionid: sessionid}
 	//lg.SetFileName(filename)
 	//lg.SetSessionID(sessionid)
-
-	fmt.Println(lg.GetDetails())
+	//fmt.Println(lg.GetDetails())
 	channels[lg.sessionid] = lg
 
 	ssl.channels = channels
@@ -224,15 +223,19 @@ func (ssl SimpleLogger) OpenChannel(sessionid string) []error {
 		// have to set the filter for the channel
 		if len(sessionid) > 0 {
 			if channel.GetSessionID() == sessionid {
-				err := channel.Open()
+				newchannel, err := channel.Open()
 				if err != nil {
 					results = append(results, err)
+				} else {
+					ssl.AddChannel(newchannel)
 				}
 			}
 		} else {
-			err := channel.Open()
+			newchannel, err := channel.Open()
 			if err != nil {
 				results = append(results, err)
+			} else {
+				ssl.AddChannel(newchannel)
 			}
 		}
 	}
@@ -254,16 +257,14 @@ func (ssl SimpleLogger) GetLogLevel() kitlevel.Option {
 
 func (ssl SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) error {
 
-	channel := SimpleChannel{}
-	channel.SetFileName(logfilename)
-	channel.SetSessionID(sessionid)
+	channel := SimpleChannel{filename: logfilename, sessionid: sessionid}
 
-	err := channel.Open()
+	newchannel, err := channel.Open()
 	if err != nil {
 		return err
 	}
 
-	ssl.AddChannel(channel)
+	ssl.AddChannel(newchannel)
 
 	// default to show everything
 	ssl.SetLogLevel(kitlevel.AllowAll())
