@@ -14,6 +14,6 @@ type IAppLogger interface {
 	LogInfo(cmd string, data ...interface{})
 	LogDebug(cmd string, data ...interface{})
 
-	StartLogging()
-	FinishLogging()
+	StartLogging() []error
+	FinishLogging() []error
 }

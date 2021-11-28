@@ -18,8 +18,8 @@ type AppLogger struct {
 */
 
 // the logging functions are here
-func (al AppLogger) StartLogging() {
-
+func (al AppLogger) StartLogging() []error {
+	results := []error{}
 	if al.Log == nil {
 		log := NewApplicationNowLogger()
 
@@ -28,18 +28,21 @@ func (al AppLogger) StartLogging() {
 
 		al.Log = log
 	} else {
-		al.Log.OpenAllChannels()
+		results = al.Log.OpenAllChannels()
 	}
 
 	al.Started = true
+	return results
 }
 
 // the logging functions are here
-func (al AppLogger) FinishLogging() {
-
+func (al AppLogger) FinishLogging() []error {
+	results := []error{}
 	if al.Log != nil {
-		al.Log.CloseAllChannels()
+		return al.Log.CloseAllChannels()
 	}
+
+	return results
 }
 
 /*
