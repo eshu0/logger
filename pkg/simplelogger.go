@@ -184,39 +184,57 @@ func (ssl SimpleLogger) SetPrintToScreen(toggle sli.PrintLevel) {
 	ssl.printtoscreen = toggle
 }
 
-func (ssl SimpleLogger) CloseChannel(sessionid string) {
+func (ssl SimpleLogger) CloseChannel(sessionid string) []error {
+
+	results := []error{}
+
 	// have to set the filter for the level
 	for _, channel := range ssl.channels {
-		if sessionid == "" {
-			channel.Close()
-		} else {
+		if len(sessionid) > 0 {
 			if channel.GetSessionID() == sessionid {
-				channel.Close()
+				err := channel.Close()
+				if err != nil {
+					results = append(results, err)
+				}
+			}
+		} else {
+			err := channel.Close()
+			if err != nil {
+				results = append(results, err)
 			}
 		}
 	}
+
+	return results
 }
 
-func (ssl SimpleLogger) CloseAllChannels() {
-	ssl.CloseChannel("")
+func (ssl SimpleLogger) CloseAllChannels() []error {
+	return ssl.CloseChannel("")
 }
 
-func (ssl SimpleLogger) OpenChannel(sessionid string) {
-
+func (ssl SimpleLogger) OpenChannel(sessionid string) []error {
+	results := []error{}
 	for _, channel := range ssl.channels {
 		// have to set the filter for the channel
 		if len(sessionid) > 0 {
 			if channel.GetSessionID() == sessionid {
-				channel.Open()
+				err := channel.Open()
+				if err != nil {
+					results = append(results, err)
+				}
 			}
 		} else {
-			channel.Open()
+			err := channel.Open()
+			if err != nil {
+				results = append(results, err)
+			}
 		}
 	}
+	return results
 }
 
-func (ssl SimpleLogger) OpenAllChannels() {
-	ssl.OpenChannel("")
+func (ssl SimpleLogger) OpenAllChannels() []error {
+	return ssl.OpenChannel("")
 }
 
 func (ssl SimpleLogger) SetLogLevel(lvl kitlevel.Option) {
@@ -228,17 +246,23 @@ func (ssl SimpleLogger) GetLogLevel() kitlevel.Option {
 	return ssl.globallevel
 }
 
-func (ssl SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) {
+func (ssl SimpleLogger) OpenSessionFileLog(logfilename string, sessionid string) error {
 
 	channel := SimpleChannel{}
 	channel.SetFileName(logfilename)
 	channel.SetSessionID(sessionid)
-	channel.Open()
+
+	err := channel.Open()
+	if err != nil {
+		return err
+	}
 
 	ssl.AddChannel(channel)
 
 	// default to show everything
 	ssl.SetLogLevel(kitlevel.AllowAll())
+
+	return nil
 }
 
 /*

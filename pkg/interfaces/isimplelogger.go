@@ -31,14 +31,14 @@ type ISimpleLogger interface {
 	LogInfo(cmd string, data ...interface{})
 	LogDebug(cmd string, data ...interface{})
 
-	OpenSessionFileLog(logfilename string, sessionid string)
+	OpenSessionFileLog(logfilename string, sessionid string) error
 	GetSessionIDs() []string
 
-	CloseChannel(sessionid string)
-	CloseAllChannels()
+	CloseChannel(sessionid string) []error
+	CloseAllChannels() []error
 
-	OpenChannel(sessionid string)
-	OpenAllChannels()
+	OpenChannel(sessionid string) []error
+	OpenAllChannels() []error
 
 	AddChannel(log ISimpleChannel)
 	GetChannel(sessionid string) ISimpleChannel

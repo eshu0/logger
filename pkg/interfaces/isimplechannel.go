@@ -20,6 +20,6 @@ type ISimpleChannel interface {
 	GetLogLevel() kitlevel.Option
 	SetLogLevel(kitlevel.Option)
 
-	Open()
-	Close()
+	Open() error
+	Close() error
 }

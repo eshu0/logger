@@ -1,7 +1,7 @@
 package simplelogger
 
 import (
-	"fmt"
+	"errors"
 	"os"
 
 	sli "github.com/eshu0/logger/pkg/interfaces"
@@ -68,21 +68,22 @@ func (lo SimpleChannel) GetLog() kitlog.Logger {
 	return lo.log
 }
 
-func (lo SimpleChannel) Close() {
+func (lo SimpleChannel) Close() error {
 	if lo.fileptr != nil {
-		lo.fileptr.Close()
+		return lo.fileptr.Close()
 	}
+
+	return nil
 }
 
-func (lo SimpleChannel) Open() {
+func (lo SimpleChannel) Open() error {
 
 	if len(lo.filename) > 0 {
 		f, err := os.OpenFile(lo.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 		// check error
 		if err != nil {
-			fmt.Printf("Err %v for %s\n", err, lo.filename)
-			panic(err)
+			return err
 		}
 
 		logger := kitlog.NewLogfmtLogger(f)                                                        //(f, session.ID()+" ", log.LstdFlags)
@@ -90,13 +91,15 @@ func (lo SimpleChannel) Open() {
 
 		// check log is valid
 		if logger == nil {
-			panic("logger is nil")
+			return errors.New("logger is nil")
 		}
 
 		lo.SetLog(logger)
 		lo.fileptr = f
+		return nil
+
 	} else {
-		panic("")
+		return errors.New("filename was missing from the channel")
 	}
 
 }
